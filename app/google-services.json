@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "192226680630",
+    "project_id": "class-collab-3915d",
+    "storage_bucket": "class-collab-3915d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192226680630:android:4424b080dc553ae5ef9d97",
+        "android_client_info": {
+          "package_name": "com.example.classcollab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192226680630-pi8prg1ehr1laccf9fhmdaejkvqe3s0l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.classcollab",
+            "certificate_hash": "242e733609384816e8ce6815547a0a0a15c5d879"
+          }
+        },
+        {
+          "client_id": "192226680630-e5lnhdpo8i10kl1sidm2c0uk5ihtbhre.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZcyaeQ1xvuP-mpoHTrFi2JRwS8z9biwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192226680630-e5lnhdpo8i10kl1sidm2c0uk5ihtbhre.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
