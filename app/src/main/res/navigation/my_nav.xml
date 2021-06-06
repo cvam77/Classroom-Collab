@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_mainScreenFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_createdClasses"
+            app:destination="@id/createdClasses" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -53,4 +56,9 @@
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createdClasses"
+        android:name="com.example.classcollab.CreatedClasses"
+        android:label="fragment_created_classes"
+        tools:layout="@layout/fragment_created_classes" />
 </navigation>
