@@ -75,7 +75,7 @@ class CreateClassChannelFragment : Fragment() {
 
     private fun AddChannelToDb(uid: String, randNum: Int, channelName: String) {
         database = Firebase.database.reference
-        database.child("users").child(uid).child("created").child("channel_id").setValue(randNum.toString())
+        database.child("users").child(uid).child("created").child(randNum.toString()).setValue("channel_id")
         database.child("channels").child(randNum.toString()).child("channel_name").setValue(channelName)
 
     }
