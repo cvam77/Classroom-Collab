@@ -58,4 +58,5 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.firebase:firebase-database-ktx'
 
+    def lifecycle_version = "2.3.1"
 }

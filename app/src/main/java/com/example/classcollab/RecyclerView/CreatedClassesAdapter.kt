@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.R
 
-class CreatedClassesAdapter(private val dataset: Array<String>) : RecyclerView.Adapter<CreatedClassesAdapter.ViewHolder>()  {
+class CreatedClassesAdapter(private var dataset: MutableList<String>) : RecyclerView.Adapter<CreatedClassesAdapter.ViewHolder>()  {
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -25,8 +25,19 @@ class CreatedClassesAdapter(private val dataset: Array<String>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text=dataset[position]
+        holder.textView.text=getDataset()[position]
     }
 
-    override fun getItemCount() = dataset.size
+    override fun getItemCount() = getDataset().size
+
+    fun getDataset(): MutableList<String> {
+
+        return dataset
+    }
+
+    fun setDataset(passedDS: MutableList<String>){
+
+        dataset = passedDS
+        notifyDataSetChanged()
+    }
 }
