@@ -31,6 +31,15 @@
         <action
             android:id="@+id/action_mainScreenFragment_to_createdClasses"
             app:destination="@id/createdClasses" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_createdClasses2"
+            app:destination="@id/createdClasses" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_joinAClass"
+            app:destination="@id/joinAClass" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_joinedClasses"
+            app:destination="@id/joinedClasses" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -60,5 +69,28 @@
         android:id="@+id/createdClasses"
         android:name="com.example.classcollab.CreatedClasses"
         android:label="fragment_created_classes"
-        tools:layout="@layout/fragment_created_classes" />
+        tools:layout="@layout/fragment_created_classes" >
+        <action
+            android:id="@+id/action_createdClasses_to_individualClass"
+            app:destination="@id/individualClass" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinAClass"
+        android:name="com.example.classcollab.JoinAClass"
+        android:label="fragment_join_a_class"
+        tools:layout="@layout/fragment_join_a_class" />
+    <fragment
+        android:id="@+id/joinedClasses"
+        android:name="com.example.classcollab.JoinedClasses"
+        android:label="fragment_joined_classes"
+        tools:layout="@layout/fragment_joined_classes" >
+        <action
+            android:id="@+id/action_joinedClasses_to_individualClass"
+            app:destination="@id/individualClass" />
+    </fragment>
+    <fragment
+        android:id="@+id/individualClass"
+        android:name="com.example.classcollab.IndividualClass"
+        android:label="fragment_individual_class"
+        tools:layout="@layout/fragment_individual_class" />
 </navigation>

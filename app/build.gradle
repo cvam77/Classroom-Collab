@@ -57,6 +57,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.firebase:firebase-database-ktx'
-
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     def lifecycle_version = "2.3.1"
 }
