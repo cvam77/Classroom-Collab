@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +36,7 @@ class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_created_classes, container, false)
     }
 
@@ -57,11 +59,12 @@ class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
             println(it)
             createdClassesAdapter.setDataset(it)
         })
+
         prepareArrayString()
     }
 
     fun prepareArrayString(){
-        var arrayList = mutableListOf<String>()
+        viewModel.classNamesVM.clear()
         val uid = FirebaseAuth.getInstance().currentUser?.uid!!.toString()
         database = Firebase.database.reference
 
@@ -77,7 +80,7 @@ class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
 
                                 if(className !=null)
                                 {
-                                    viewModel.classNamesVM.add(className)
+                                    viewModel.classNamesVM.add(it.key.toString())
                                     viewModel.ArrayStringVM.value = viewModel.classNamesVM
 
                                 }
@@ -103,7 +106,10 @@ class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
+        val classId = viewModel.classNamesVM.get(position)
 
+        val action = CreatedClassesDirections.actionCreatedClassesToIndividualClass(classId)
+        view?.let { Navigation.findNavController(it).navigate(action) }
     }
 
 }

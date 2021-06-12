@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -59,6 +60,7 @@ class JoinedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
     }
 
     fun prepareArrayString(){
+        viewModel.joinedClassIds.clear()
         val uid = FirebaseAuth.getInstance().currentUser?.uid!!.toString()
         database = Firebase.database.reference
 
@@ -76,7 +78,7 @@ class JoinedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
 
                                     if(className !=null)
                                     {
-                                        viewModel.joinedClassIds.add(className)
+                                        viewModel.joinedClassIds.add(it.key.toString())
                                         viewModel.joinedObserveClassIds.value = viewModel.joinedClassIds
 
                                     }
@@ -95,13 +97,16 @@ class JoinedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+//                TODO("Not yet implemented")
             }
         })
 
     }
 
     override fun onItemClick(position: Int) {
-//        TODO("Not yet implemented")
+        val classId = viewModel.joinedClassIds.get(position)
+
+        val action = JoinedClassesDirections.actionJoinedClassesToIndividualClass(classId)
+        view?.let { Navigation.findNavController(it).navigate(action) }
     }
 }

@@ -7,6 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class CreatedClassesAdapter(
         private var dataset: MutableList<String>,
@@ -14,6 +20,8 @@ class CreatedClassesAdapter(
         private var listener: OnItemClickListener
 ) :
     RecyclerView.Adapter<CreatedClassesAdapter.ViewHolder>()  {
+
+    private var database: DatabaseReference = Firebase.database.reference
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -23,8 +31,19 @@ class CreatedClassesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text=getDataset().get(position)
-        println(getDataset().get(position))
+        var key = getDataset().get(position)
+        database.child("channels").child(key).child("channel_name").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val className = snapshot.value?.toString()
+
+                holder.textView.text= className
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
 
     override fun getItemCount():Int{

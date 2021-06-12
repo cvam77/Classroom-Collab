@@ -87,10 +87,17 @@
         <action
             android:id="@+id/action_joinedClasses_to_individualClass"
             app:destination="@id/individualClass" />
+        <action
+            android:id="@+id/action_joinedClasses_to_individualClass2"
+            app:destination="@id/individualClass" />
     </fragment>
     <fragment
         android:id="@+id/individualClass"
         android:name="com.example.classcollab.IndividualClass"
         android:label="fragment_individual_class"
-        tools:layout="@layout/fragment_individual_class" />
+        tools:layout="@layout/fragment_individual_class" >
+        <argument
+            android:name="classId"
+            app:argType="string" />
+    </fragment>
 </navigation>
