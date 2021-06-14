@@ -2,6 +2,7 @@ package com.example.classcollab
 
 import android.app.ActionBar
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.classcollab.databinding.FragmentIndividualClassBinding
 import com.google.firebase.database.DataSnapshot
@@ -64,6 +67,8 @@ class IndividualClass : Fragment() {
         binding.addNameFab.setOnClickListener(View.OnClickListener {
             OpenDialogBox()
         })
+
+        binding.bookTv.setOnClickListener(View.OnClickListener { Navigation.findNavController(view).navigate(R.id.action_individualClass_to_book) })
     }
 
     fun OpenDialogBox(){
@@ -84,11 +89,18 @@ class IndividualClass : Fragment() {
     }
 
     private fun CreateNewTv(text: String) {
+        database.child("channels").child(arguments.classId).child("channel_section").push().setValue(text)
+
         val tv = TextView(context)
         tv.textSize = 25f
         tv.text = text
         tv.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT)
         tv.gravity=Gravity.CENTER
+        tv.setTextColor(Color.parseColor("#000000"))
+        tv.setBackgroundColor(Color.parseColor("#FF018786"))
+        val space = 20
+        tv.setPadding(space, space, space, space)
+        (tv.layoutParams as LinearLayout.LayoutParams).setMargins(space, space, space, space)
 //        <TextView
 //        android:layout_width="match_parent"
 //        android:layout_height="wrap_content"
@@ -102,6 +114,5 @@ class IndividualClass : Fragment() {
 //        android:layout_margin="10dp"
 //        />
         binding.sectionListLl.addView(tv)
-
     }
 }

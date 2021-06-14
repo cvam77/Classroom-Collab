@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Class Name"
+        android:text=""
         android:textSize="25sp"
         android:id="@+id/class_name_tv"
         android:gravity="center"
@@ -86,6 +86,9 @@
             android:padding="10dp"
             android:layout_margin="10dp"
             />
+
+
+
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

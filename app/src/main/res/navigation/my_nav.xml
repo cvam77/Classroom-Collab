@@ -99,5 +99,13 @@
         <argument
             android:name="classId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_individualClass_to_book"
+            app:destination="@id/book" />
     </fragment>
+    <fragment
+        android:id="@+id/book"
+        android:name="com.example.classcollab.book"
+        android:label="fragment_book"
+        tools:layout="@layout/fragment_book" />
 </navigation>
