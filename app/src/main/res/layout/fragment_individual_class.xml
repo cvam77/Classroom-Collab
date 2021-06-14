@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".IndividualClass">
 
     <!-- TODO: Update blank fragment layout -->
@@ -33,8 +34,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
+        android:id="@+id/section_list_ll"
         >
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -84,6 +86,17 @@
             android:padding="10dp"
             android:layout_margin="10dp"
             />
-
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_name_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:tint="@android:color/black"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/white"
+        />
+
 </FrameLayout>
