@@ -100,12 +100,36 @@
             android:name="classId"
             app:argType="string" />
         <action
-            android:id="@+id/action_individualClass_to_book"
-            app:destination="@id/book" />
+            android:id="@+id/action_individualClass_to_assignmentField"
+            app:destination="@id/assignmentField" />
     </fragment>
     <fragment
-        android:id="@+id/book"
-        android:name="com.example.classcollab.book"
-        android:label="fragment_book"
-        tools:layout="@layout/fragment_book" />
+        android:id="@+id/assignmentField"
+        android:name="com.example.classcollab.AssignmentField"
+        android:label="fragment_assignment_field"
+        tools:layout="@layout/fragment_assignment_field" >
+        <argument
+            android:name="classId"
+            app:argType="string" />
+        <argument
+            android:name="assignmentFieldType"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_assignmentField_to_thirdLevel"
+            app:destination="@id/thirdLevel" />
+    </fragment>
+    <fragment
+        android:id="@+id/thirdLevel"
+        android:name="com.example.classcollab.ThirdLevel"
+        android:label="fragment_third_level"
+        tools:layout="@layout/fragment_third_level" >
+        <argument
+            android:name="classId"
+            app:argType="string" />
+        <argument android:name="levelOneBranch"
+            app:argType="string" />
+        <argument
+            android:name="levelTwoBranch"
+            app:argType="string" />
+    </fragment>
 </navigation>

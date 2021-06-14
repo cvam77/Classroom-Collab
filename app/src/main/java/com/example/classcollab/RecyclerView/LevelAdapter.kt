@@ -7,50 +7,29 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.R
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
-class CreatedClassesAdapter(
+class LevelAdapter (
         private var dataset: MutableList<String>,
         private val context: Context?,
-        private var listener: OnItemClickListener
-) :
-    RecyclerView.Adapter<CreatedClassesAdapter.ViewHolder>()  {
-
-    private var database: DatabaseReference = Firebase.database.reference
+        private var listener: LevelAdapter.OnItemClickListener
+        ) : RecyclerView.Adapter<LevelAdapter.ViewHolder>()
+{
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         val view = LayoutInflater.from(context).inflate(R.layout.each_createdclass_layout,parent,false)
 
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        var key = getDataset().get(position)
-        database.child("channels").child(key).child("channel_name").addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val className = snapshot.value?.toString()
-
-                holder.textView.text= className
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-
+        var string = getDataset().get(position)
+        holder.textView.text = string
     }
 
-    override fun getItemCount():Int{
-         if(dataset.size==0)
-             return 0
-         return getDataset().size
+    override fun getItemCount(): Int {
+        if(dataset.size==0)
+            return 0
+        return getDataset().size
     }
 
     fun getDataset(): MutableList<String> {
@@ -72,15 +51,17 @@ class CreatedClassesAdapter(
 
         override fun onClick(p0: View?) {
             val position:Int = absoluteAdapterPosition
+
             if(position != RecyclerView.NO_POSITION)
             {
-                listener.onItemClick(position)
+                val string = getDataset().get(position)
+                listener.onItemClick(string)
             }
 
         }
     }
 
     interface OnItemClickListener{
-        fun onItemClick(position: Int)
+        abstract fun onItemClick(position: String)
     }
 }

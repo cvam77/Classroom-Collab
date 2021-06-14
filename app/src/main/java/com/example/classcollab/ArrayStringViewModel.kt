@@ -5,6 +5,21 @@ import androidx.lifecycle.ViewModel
 
 class ArrayStringViewModel : ViewModel(){
 
+    var levelStrings = mutableListOf<String>()
+    val levelStringsVM : MutableLiveData<MutableList<String>> by lazy {
+        MutableLiveData<MutableList<String>>()
+    }
+
+    var assignmentTopic = mutableListOf<String>()
+    val assignmentTopicVM : MutableLiveData<MutableList<String>> by lazy {
+        MutableLiveData<MutableList<String>>()
+    }
+
+    var thirdLevelStrings = mutableListOf<String>()
+    val thirdLevelStringsVM : MutableLiveData<MutableList<String>> by lazy {
+        MutableLiveData<MutableList<String>>()
+    }
+
     var joinedClassIds = mutableListOf<String>()
     val joinedObserveClassIds : MutableLiveData<MutableList<String>> by lazy {
         MutableLiveData<MutableList<String>>()

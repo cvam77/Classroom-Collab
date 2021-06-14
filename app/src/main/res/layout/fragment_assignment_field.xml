@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".book">
+    tools:context=".AssignmentField">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -11,36 +11,7 @@
         android:id="@+id/rv_createdClasses"
         />
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ch_one"
-            android:text="Chapter 1"
-            android:background="@color/teal_700"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ch_two"
-            android:text="Chapter 2"
-            android:background="@color/teal_700"
-            android:textColor="@color/black"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

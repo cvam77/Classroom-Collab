@@ -4,102 +4,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".IndividualClass">
+    tools:context=".IndividualClass"
+    >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Id"
+            android:textSize="20sp"
+            android:id="@+id/class_id_tv"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="25sp"
+            android:id="@+id/class_name_tv"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Class Id"
-        android:textSize="20sp"
-        android:id="@+id/class_id_tv"
-        android:gravity="center"
-        android:layout_margin="10dp"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="25sp"
-        android:id="@+id/class_name_tv"
-        android:gravity="center"
-        android:layout_marginTop="50dp"
-
-        android:textColor="@color/black"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:id="@+id/section_list_ll"
         >
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Book"
-            android:textSize="25sp"
-            android:textColor="@color/black"
-            android:id="@+id/book_tv"
-            android:background="@color/teal_700"
-            android:padding="10dp"
-            android:layout_margin="10dp"
+            android:id="@+id/rv_createdClasses"
             />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Assignments"
-            android:textSize="25sp"
-            android:textColor="@color/black"
-            android:id="@+id/hw_tv"
-            android:background="@color/teal_700"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Tests"
-            android:textSize="25sp"
-            android:textColor="@color/black"
-            android:id="@+id/Test_tv"
-            android:background="@color/teal_700"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Miscellaneous"
-            android:textSize="25sp"
-            android:textColor="@color/black"
-            android:id="@+id/misc_tv"
-            android:background="@color/teal_700"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
-
-
-
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_name_fab"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:tint="@android:color/black"
-        app:srcCompat="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/white"
-        />
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_500"
+            android:text="Add Folder Here"
+            android:id="@+id/add_folder"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/add_name_fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|right"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:tint="@android:color/black"-->
+<!--        app:srcCompat="@android:drawable/ic_input_add"-->
+<!--        app:backgroundTint="@color/white"-->
+<!--        />-->
 
 </FrameLayout>
