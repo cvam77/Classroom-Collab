@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Type Question"
+        android:id="@+id/type_question"/>
+    <item android:title="Upload Saved Question"
+        android:id="@+id/upload"/>
+    <item android:title="Take Picture and Upload"
+        android:id="@+id/take_picture"/>
+</menu>

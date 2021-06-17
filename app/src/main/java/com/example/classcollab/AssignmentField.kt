@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -69,6 +71,16 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 
         binding.addFolder.setOnClickListener(View.OnClickListener {
             OpenDialogBox()
+        })
+
+        binding.addQuestion.setOnClickListener(View.OnClickListener {
+            val popup = PopupMenu(context,binding.addQuestion)
+            popup.inflate(R.menu.add_question_menu)
+            popup.setOnMenuItemClickListener {
+                Toast.makeText(context,"Item: " + it.title, Toast.LENGTH_SHORT).show()
+                true
+            }
+            popup.show()
         })
     }
 
