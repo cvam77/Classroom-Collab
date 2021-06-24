@@ -3,7 +3,7 @@
 
     <item android:title="Type Question"
         android:id="@+id/type_question"/>
-    <item android:title="Upload Saved Question"
+    <item android:title="Upload From Gallery"
         android:id="@+id/upload"/>
     <item android:title="Take Picture and Upload"
         android:id="@+id/take_picture"/>

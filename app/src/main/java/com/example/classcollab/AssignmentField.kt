@@ -1,7 +1,13 @@
 package com.example.classcollab
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.RecyclerView.LevelAdapter
 import com.example.classcollab.databinding.FragmentAssignmentFieldBinding
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -26,6 +33,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 
@@ -34,6 +46,9 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
     lateinit var viewModel: ArrayStringViewModel
     private lateinit var levelAdapter: LevelAdapter
     val arguments: AssignmentFieldArgs by navArgs()
+    lateinit var ImageUri : Uri
+    private lateinit var storageReference: StorageReference
+    private lateinit var questionTitle: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,36 +85,127 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         prepareLevelString()
 
         binding.addFolder.setOnClickListener(View.OnClickListener {
-            OpenDialogBox()
+            OpenDialogBox("section","")
         })
 
         binding.addQuestion.setOnClickListener(View.OnClickListener {
             val popup = PopupMenu(context,binding.addQuestion)
             popup.inflate(R.menu.add_question_menu)
             popup.setOnMenuItemClickListener {
-                Toast.makeText(context,"Item: " + it.title, Toast.LENGTH_SHORT).show()
+                popUpClicked(it.title as String)
                 true
             }
             popup.show()
         })
     }
 
-    fun OpenDialogBox(){
+    fun OpenDialogBox(dialogTitle: String, dialogOption: String){
         val builder = AlertDialog.Builder(context)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.enter_name_et,null)
         val edittext = dialogLayout.findViewById<EditText>(R.id.enter_name_edittext)
 
-        with(builder){
-            setTitle("Enter the new section name")
-            setPositiveButton("OK"){dialog, which ->
-                val thirdLevel = edittext.text.toString()
-                database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child(thirdLevel).setValue("nothing")
+        if(dialogTitle.equals("section")){
+            with(builder){
+                setTitle("Enter the new $dialogTitle name")
+                setPositiveButton("OK"){dialog, which ->
+                    val thirdLevel = edittext.text.toString()
+                    database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child(thirdLevel).setValue("nothing")
 
+                }
+                setNegativeButton("Cancel"){dialog,which->}
+                setView(dialogLayout)
+                show()
             }
-            setNegativeButton("Cancel"){dialog,which->}
-            setView(dialogLayout)
-            show()
+        }
+        else if(dialogTitle.equals("question")){
+            with(builder){
+                setTitle("Enter a $dialogTitle topic before proceeding!")
+                setPositiveButton("OK"){dialog, which ->
+
+                    questionTitle = edittext.text.toString()
+                    when{
+                        TextUtils.isEmpty(questionTitle.trim { it <= ' '}) ->{
+                            Toast.makeText(context,
+                                    "Enter a non empty name",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+
+                        else -> {
+                            if(dialogOption.equals("Upload From Gallery")){
+                                UploadFromGallery()
+                            }
+                        }
+                    }
+                }
+                setNegativeButton("Cancel"){dialog,which->}
+                setView(dialogLayout)
+                show()
+            }
+        }
+
+    }
+
+
+    fun popUpClicked(option: String){
+
+        if(option.equals("Upload From Gallery")){
+            OpenDialogBox("question","Upload From Gallery")
+        }
+    }
+
+    private fun UploadFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+//        intent.type = "images/*"
+//        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent,100)
+    }
+
+    private fun UploadToFirebase(imgUri: String){
+        val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
+        val now = Date()
+        val fileName = formatter.format(now)
+        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+
+        storageReference.putFile(ImageUri).addOnSuccessListener {
+            Toast.makeText(context,"Successfully uploaded", Toast.LENGTH_SHORT).show()
+
+            val path = database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child("actual_question")
+            val actualQuestionKey = path.push().key
+
+            val currentUser = FirebaseAuth.getInstance().currentUser?.email
+            if (actualQuestionKey != null) {
+                path.child(actualQuestionKey).setValue("true")
+                val map = mapOf(fileName to currentUser)
+                database.child("questions").child(actualQuestionKey).child("image").setValue(map)
+                database.child("questions").child(actualQuestionKey).child("title").setValue(questionTitle)
+
+//                setImageView(fileName)
+            }
+
+        }.addOnFailureListener{
+            Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+//    private fun setImageView(fileName: String) {
+//        val localfile = File.createTempFile("tempImage","jpg")
+//        storageReference.getFile(localfile).addOnSuccessListener {
+//            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+//            binding.testIv.setImageBitmap(bitmap)
+//        }.addOnFailureListener{
+//            Toast.makeText(context,"Failed", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == 100 && resultCode == RESULT_OK)
+        {
+            ImageUri = data?.data!!
+            UploadToFirebase(ImageUri.toString())
         }
     }
 
@@ -109,8 +215,12 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
                 viewModel.levelStrings.clear()
                 val children = snapshot!!.children
                 children.forEach {
-                    viewModel.levelStrings.add(it.key.toString())
-                    viewModel.levelStringsVM.value = viewModel.levelStrings
+                    if(!(it.key.equals("actual_question")))
+                    {
+                        viewModel.levelStrings.add(it.key.toString())
+                        viewModel.levelStringsVM.value = viewModel.levelStrings
+                    }
+
                 }
             }
 
