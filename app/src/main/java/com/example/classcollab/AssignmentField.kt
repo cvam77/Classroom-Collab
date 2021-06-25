@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.RecyclerView.LevelAdapter
+import com.example.classcollab.RecyclerView.QuestionImageAdapter
 import com.example.classcollab.databinding.FragmentAssignmentFieldBinding
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -45,6 +46,7 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
     private lateinit var database: DatabaseReference
     lateinit var viewModel: ArrayStringViewModel
     private lateinit var levelAdapter: LevelAdapter
+    private lateinit var questionImageAdapter: QuestionImageAdapter
     val arguments: AssignmentFieldArgs by navArgs()
     lateinit var ImageUri : Uri
     private lateinit var storageReference: StorageReference
@@ -68,21 +70,39 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
+        println("Shivam = " + arguments.assignmentFieldType)
 
         val recyclerView: RecyclerView = binding.rvCreatedClasses
         var emptyList = mutableListOf<String>()
-
         levelAdapter = LevelAdapter(emptyList,context,this)
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = levelAdapter
 
+
+
         viewModel.levelStringsVM.observe(viewLifecycleOwner, Observer {
             levelAdapter.setDataset(it)
         })
 
         prepareLevelString()
+
+        if(arguments.assignmentFieldType.equals("misc"))
+        {
+            val questionlayoutManager = LinearLayoutManager(context)
+            val questionRecyclerView: RecyclerView = binding.rvIndividualQuestions
+            questionImageAdapter = QuestionImageAdapter(context,emptyList)
+            questionRecyclerView.layoutManager = questionlayoutManager
+            questionRecyclerView.itemAnimator = DefaultItemAnimator()
+            questionRecyclerView.adapter = questionImageAdapter
+
+            viewModel.questionIDsListVM.observe(viewLifecycleOwner, Observer {
+                questionImageAdapter.setQuestionSet(it)
+            })
+
+            prepareQuestionIdList()
+        }
 
         binding.addFolder.setOnClickListener(View.OnClickListener {
             OpenDialogBox("section","")
@@ -96,6 +116,44 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
                 true
             }
             popup.show()
+        })
+    }
+
+    private fun prepareQuestionIdList() {
+        database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child("actual_question").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                viewModel.questionIDsList.clear()
+                val children = snapshot!!.children
+                children.forEach {
+                    println(it.key)
+                    viewModel.questionIDsList.add(it.key.toString())
+                    viewModel.questionIDsListVM.value = viewModel.questionIDsList
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+        database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                viewModel.levelStrings.clear()
+                val children = snapshot!!.children
+                children.forEach {
+                    if(!(it.key.equals("actual_question")))
+                    {
+                        viewModel.levelStrings.add(it.key.toString())
+                        viewModel.levelStringsVM.value = viewModel.levelStrings
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
         })
     }
 

@@ -7,10 +7,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/question_title_tv"
+        android:layout_margin="0dp"
+        android:text=""
+        android:background="@color/purple_200"
+        android:padding="3dp"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/username_tv"
-        android:layout_margin="10dp"
-        android:text="shivam@gmail.com"
-        android:background="@color/teal_700"
+        android:layout_margin="0dp"
+        android:text=""
+        android:background="@color/browser_actions_bg_grey"
         android:padding="3dp"
         />
 
@@ -18,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timestamp_tv"
-        android:layout_margin="10dp"
+        android:layout_margin="0dp"
         android:padding="2dp"
         />
 
@@ -27,6 +38,6 @@
         android:layout_height="300dp"
         android:layout_gravity="center"
         android:id="@+id/question_iv"
-        android:layout_margin="10dp"
+        android:layout_margin="0dp"
         />
 </LinearLayout>
