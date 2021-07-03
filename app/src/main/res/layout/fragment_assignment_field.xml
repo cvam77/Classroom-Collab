@@ -57,25 +57,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
 
 
         <Button
             android:id="@+id/add_question"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="35dp"
+            android:layout_margin="1dp"
+            android:gravity="center"
             android:background="@color/purple_500"
             android:text="Add Question Here" />
 
         <Button
             android:id="@+id/add_folder"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="35dp"
+            android:layout_margin="1dp"
             android:background="@color/purple_500"
-            android:text="Add Folder Here" />
+            android:text="Add Folder Here"
+            android:gravity="center"
+            />
+
     </LinearLayout>
 
 </FrameLayout>

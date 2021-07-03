@@ -2,14 +2,16 @@ package com.example.classcollab.RecyclerView
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.R
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -19,6 +21,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class QuestionImageAdapter(
     private val context: Context?,
@@ -79,6 +83,45 @@ class QuestionImageAdapter(
         holder.textViewEmail.text = "abc@yahoo.com"
         holder.textViewTime.text = questionId
         holder.imageViewQuestion.setImageURI(null)
+
+
+
+        holder.doneButton.setOnClickListener(View.OnClickListener {
+            val comment = holder.addCommentEt.text.toString()
+            when{
+                TextUtils.isEmpty(comment.trim { it <= ' '}) ->{
+                    Toast.makeText(context,
+                            "No comments!",
+                            Toast.LENGTH_SHORT).show()
+                }
+
+                else -> {
+//                    val formatter = SimpleDateFormat("yyyyMMdd-HH:mm:ss", Locale.getDefault())
+//                    val now = Date()
+//                    val commentTime = formatter.format(now)
+
+//                    getDate(82233213123L, "dd/MM/yyyy hh:mm:ss.SSS")
+
+//                    public static String getDate(long milliSeconds, String dateFormat)
+//                    {
+//                        // Create a DateFormatter object for displaying date in specified format.
+//                        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+//
+//                        // Create a calendar object that will convert the date and time value in milliseconds to date.
+//                        Calendar calendar = Calendar.getInstance();
+//                        calendar.setTimeInMillis(milliSeconds);
+//                        return formatter.format(calendar.getTime());
+//                    }
+                    val curTime = System.currentTimeMillis().toString()
+                    database.child("questions").child(questionId).child("comments").child(curTime).setValue("true")
+                    val commentPath = database.child("comments").child(curTime)
+                    commentPath.child("commenter").setValue(FirebaseAuth.getInstance().currentUser?.email)
+                    commentPath.child("comment").setValue(comment)
+                    holder.addCommentEt.setText("")
+                }
+            }
+        })
+
     }
 
     override fun getItemCount(): Int {
@@ -102,5 +145,9 @@ class QuestionImageAdapter(
         val textViewEmail = view.findViewById<TextView>(R.id.username_tv)
         val textViewTime = view.findViewById<TextView>(R.id.timestamp_tv)
         val imageViewQuestion = view.findViewById<ImageView>(R.id.question_iv)
+
+        val commentsRv = view.findViewById<RecyclerView>(R.id.comments_rv)
+        val addCommentEt = view.findViewById<EditText>(R.id.add_comment_et)
+        val doneButton = view.findViewById<Button>(R.id.done_btn)
     }
 }

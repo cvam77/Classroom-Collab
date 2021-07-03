@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/question_title_tv"
         android:layout_margin="0dp"
-        android:text=""
+        android:text="abc"
         android:background="@color/purple_200"
         android:padding="3dp"
         android:layout_gravity="center"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/username_tv"
         android:layout_margin="0dp"
-        android:text=""
+        android:text="abc"
         android:background="@color/browser_actions_bg_grey"
         android:padding="3dp"
         />
@@ -31,6 +31,7 @@
         android:id="@+id/timestamp_tv"
         android:layout_margin="0dp"
         android:padding="2dp"
+        android:text="abc"
         />
 
     <ImageView
@@ -40,4 +41,34 @@
         android:id="@+id/question_iv"
         android:layout_margin="0dp"
         />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/comments_rv"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_comment_et"
+            android:hint="add a comment..."
+
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="->"
+            android:id="@+id/done_btn"
+            android:padding="2dp"
+            />
+    </LinearLayout>
+
 </LinearLayout>
