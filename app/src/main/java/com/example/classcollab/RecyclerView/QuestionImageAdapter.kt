@@ -7,8 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.ViewModelProvider
+
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.example.classcollab.CommentsViewModel
 import com.example.classcollab.R
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -28,10 +31,11 @@ class QuestionImageAdapter(
     private val context: Context?,
     private var questionSet: MutableList<String>
 ) :
-        RecyclerView.Adapter<QuestionImageAdapter.ViewHolder>()
-{
+        RecyclerView.Adapter<QuestionImageAdapter.ViewHolder>() {
     private lateinit var database: DatabaseReference
     private lateinit var storageReference: StorageReference
+    lateinit var commentsViewModel: CommentsViewModel
+    lateinit var commentsAdapter: CommentsAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.question_set_layout,parent,false)
@@ -122,6 +126,9 @@ class QuestionImageAdapter(
             }
         })
 
+
+        // comments part
+//        commentsViewModel = ViewModelProvider(this).get(CommentsViewModel::class.java)
     }
 
     override fun getItemCount(): Int {
@@ -150,4 +157,5 @@ class QuestionImageAdapter(
         val addCommentEt = view.findViewById<EditText>(R.id.add_comment_et)
         val doneButton = view.findViewById<Button>(R.id.done_btn)
     }
+
 }

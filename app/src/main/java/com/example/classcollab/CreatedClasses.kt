@@ -81,6 +81,7 @@ class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
                                 if(className !=null)
                                 {
                                     viewModel.classNamesVM.add(it.key.toString())
+                                    println(it.key.toString())
                                     viewModel.ArrayStringVM.value = viewModel.classNamesVM
 
                                 }
