@@ -5,6 +5,11 @@ import androidx.lifecycle.ViewModel
 
 class ArrayStringViewModel : ViewModel(){
 
+    var commentIDsList = mutableListOf<String>()
+    val commentIDsListVM : MutableLiveData<MutableList<String>> by lazy {
+        MutableLiveData<MutableList<String>>()
+    }
+
     var questionIDsList = mutableListOf<String>()
     val questionIDsListVM : MutableLiveData<MutableList<String>> by lazy {
         MutableLiveData<MutableList<String>>()

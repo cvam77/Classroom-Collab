@@ -3,7 +3,6 @@ package com.example.classcollab
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -25,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.RecyclerView.LevelAdapter
 import com.example.classcollab.RecyclerView.QuestionImageAdapter
 import com.example.classcollab.databinding.FragmentAssignmentFieldBinding
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -36,7 +34,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 

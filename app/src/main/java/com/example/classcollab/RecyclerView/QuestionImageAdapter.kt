@@ -7,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.example.classcollab.CommentsViewModel
 import com.example.classcollab.R
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,26 +22,23 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 
 class QuestionImageAdapter(
-    private val context: Context?,
-    private var questionSet: MutableList<String>
+        private val context: Context?,
+        private var questionSet: MutableList<String>
 ) :
         RecyclerView.Adapter<QuestionImageAdapter.ViewHolder>() {
     private lateinit var database: DatabaseReference
     private lateinit var storageReference: StorageReference
-    lateinit var commentsViewModel: CommentsViewModel
     lateinit var commentsAdapter: CommentsAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.question_set_layout,parent,false)
+
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         var questionId = getQuestionSet().get(position)
         database = Firebase.database.reference
 
@@ -128,8 +123,29 @@ class QuestionImageAdapter(
 
 
         // comments part
-//        commentsViewModel = ViewModelProvider(this).get(CommentsViewModel::class.java)
+        val commentLayoutManager = LinearLayoutManager(context)
+        val commentsRv: RecyclerView = holder.commentsRv
+//        val commentsList: MutableList<String> = prepareCommentArrayList(questionId)
+        var emptyList = mutableListOf<String>("shivam","chaudhary")
+        commentsAdapter = CommentsAdapter(context,emptyList)
+        commentsRv.layoutManager = commentLayoutManager
+        commentsRv.itemAnimator = DefaultItemAnimator()
+        commentsRv.adapter = commentsAdapter
     }
+
+//    private fun prepareCommentArrayList(questionId: String): MutableList<String> {
+//
+//        database.child("questions").child(questionId).child("comments").addValueEventListener(object: ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
+//    }
 
     override fun getItemCount(): Int {
         if(questionSet.size == 0)
