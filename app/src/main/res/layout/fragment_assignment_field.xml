@@ -1,86 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AssignmentField">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        >
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_createdClasses"
-            android:layout_margin="10dp"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rv_individual_questions"
-            android:layout_margin="10dp"
-            />
-    </LinearLayout>
-
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="vertical">-->
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/rv_createdClasses"-->
-<!--            android:layout_margin="10dp"-->
-<!--            />-->
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/rv_reatedClasses"-->
-<!--            android:layout_margin="10dp"-->
-<!--            />-->
-<!--    </LinearLayout>-->
-    <!-- TODO: Update blank fragment layout -->
-
-
-<!--    <ImageView-->
-<!--        android:id="@+id/test_iv"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"/>-->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
+        android:fillViewport="true"
         >
 
-
-
-        <Button
-            android:id="@+id/add_question"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_margin="1dp"
-            android:gravity="center"
-            android:background="@color/purple_500"
-            android:text="Add Question Here" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/add_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_margin="1dp"
-            android:background="@color/purple_500"
-            android:text="Add Folder Here"
-            android:gravity="center"
-            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_createdClasses"
+                    android:layout_margin="10dp"
+                    />
 
-    </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_individual_questions"
+                    android:layout_margin="10dp"
+                    />
+            </LinearLayout>
+
+
+            <!--    <LinearLayout-->
+            <!--        android:layout_width="match_parent"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:orientation="vertical">-->
+            <!--        <androidx.recyclerview.widget.RecyclerView-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:id="@+id/rv_createdClasses"-->
+            <!--            android:layout_margin="10dp"-->
+            <!--            />-->
+
+            <!--        <androidx.recyclerview.widget.RecyclerView-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:id="@+id/rv_reatedClasses"-->
+            <!--            android:layout_margin="10dp"-->
+            <!--            />-->
+            <!--    </LinearLayout>-->
+            <!-- TODO: Update blank fragment layout -->
+
+
+            <!--    <ImageView-->
+            <!--        android:id="@+id/test_iv"-->
+            <!--        android:layout_width="wrap_content"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:layout_gravity="center"/>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal"
+                >
+
+
+
+                <Button
+                    android:id="@+id/add_question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_margin="1dp"
+                    android:gravity="center"
+                    android:background="@color/purple_500"
+                    android:text="Add Question Here" />
+
+                <Button
+                    android:id="@+id/add_folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/purple_500"
+                    android:text="Add Folder Here"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+
 
 </FrameLayout>

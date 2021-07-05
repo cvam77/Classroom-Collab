@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 
@@ -67,17 +68,15 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
-        println("Shivam = " + arguments.assignmentFieldType)
 
         val recyclerView: RecyclerView = binding.rvCreatedClasses
+
         var emptyList = mutableListOf<String>()
         levelAdapter = LevelAdapter(emptyList,context,this)
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = levelAdapter
-
-
 
         viewModel.levelStringsVM.observe(viewLifecycleOwner, Observer {
             levelAdapter.setDataset(it)
@@ -89,12 +88,14 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         {
             val questionlayoutManager = LinearLayoutManager(context)
             val questionRecyclerView: RecyclerView = binding.rvIndividualQuestions
-            questionImageAdapter = QuestionImageAdapter(context,emptyList)
+            var emptyListList: HashMap<String, MutableList<String>> = HashMap()
+            emptyListList.put("questionId", mutableListOf())
+            questionImageAdapter = QuestionImageAdapter(context,emptyListList)
             questionRecyclerView.layoutManager = questionlayoutManager
             questionRecyclerView.itemAnimator = DefaultItemAnimator()
             questionRecyclerView.adapter = questionImageAdapter
 
-            viewModel.questionIDsListVM.observe(viewLifecycleOwner, Observer {
+            viewModel.questionIDsMapVM.observe(viewLifecycleOwner, Observer {
                 questionImageAdapter.setQuestionSet(it)
             })
 
@@ -116,15 +117,54 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         })
     }
 
+    private fun prepareCommentsIdList(questionKey: String) {
+//        TODO("Not yet implemented")
+        database.child("questions").child(questionKey).child("comments").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                viewModel.questionIDsMap.remove(questionKey)
+                val children = snapshot!!.children
+                children.forEach {
+                    if(viewModel.questionIDsMap.containsKey(questionKey)){
+                        viewModel.questionIDsMap.get(questionKey)!!.add(it.key.toString())
+                        viewModel.questionIDsMapVM.value = viewModel.questionIDsMap
+                    }
+                    else{
+                        viewModel.questionIDsMap.put(questionKey, mutableListOf(it.key.toString()))
+                        viewModel.questionIDsMapVM.value = viewModel.questionIDsMap
+
+                    }
+
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
     private fun prepareQuestionIdList() {
         database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child("actual_question").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.questionIDsList.clear()
+                viewModel.questionIDsMap.clear()
                 val children = snapshot!!.children
                 children.forEach {
-                    println(it.key)
-                    viewModel.questionIDsList.add(it.key.toString())
-                    viewModel.questionIDsListVM.value = viewModel.questionIDsList
+                    val questionKey = it.key.toString()
+                    viewModel.questionIDsMap.put(questionKey, mutableListOf())
+                    viewModel.questionIDsMapVM.value = viewModel.questionIDsMap
+                    prepareCommentsIdList(questionKey)
+//                    if(viewModel.questionIDsMap.containsKey(questionKey)){
+//                        viewModel.questionIDsMap.get("questionId")!!.add(it.key.toString())
+//                        viewModel.questionIDsMapVM.value = viewModel.questionIDsMap
+//                    }
+//                    else{
+//                        viewModel.questionIDsMap.put("questionId", mutableListOf(it.key.toString()))
+//                        viewModel.questionIDsMapVM.value = viewModel.questionIDsMap
+//                    }
+
+
                 }
             }
 
@@ -133,25 +173,25 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
             }
 
         })
-        database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).addValueEventListener(object: ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.levelStrings.clear()
-                val children = snapshot!!.children
-                children.forEach {
-                    if(!(it.key.equals("actual_question")))
-                    {
-                        viewModel.levelStrings.add(it.key.toString())
-                        viewModel.levelStringsVM.value = viewModel.levelStrings
-                    }
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
+//        database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).addValueEventListener(object: ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                viewModel.levelStrings.clear()
+//                val children = snapshot!!.children
+//                children.forEach {
+//                    if(!(it.key.equals("actual_question")))
+//                    {
+//                        viewModel.levelStrings.add(it.key.toString())
+//                        viewModel.levelStringsVM.value = viewModel.levelStrings
+//                    }
+//
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//
+//            }
+//
+//        })
     }
 
     fun OpenDialogBox(dialogTitle: String, dialogOption: String){

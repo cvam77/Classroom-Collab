@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import com.example.classcollab.ArrayStringViewModel
 import com.example.classcollab.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.storage.StorageReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class CommentsAdapter(
         private val context: Context?,
-        private var commentsIdList: MutableList<String>
+        private var commentsIdList: MutableList<String>?
 ) :
         RecyclerView.Adapter<CommentsAdapter.ViewHolder>()
 {
@@ -28,18 +31,36 @@ class CommentsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val commentId = commentsIdList.get(position)
-        holder.eachCommentTv.setText(commentId)
+        database = Firebase.database.reference
+        val commentId = commentsIdList!!.get(position)
+
+        database.child("comments").child(commentId).addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val children = snapshot!!.children
+                children.forEach {
+                    if(it.key.toString().equals("comment")){
+                        holder.eachCommentTv.setText(it.value.toString())
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+            }
+
+        })
+//        println("comments = " + commentId)
+
     }
 
     override fun getItemCount(): Int {
-        if(commentsIdList.size == 0)
+        if(commentsIdList!!.size == 0)
             return 0
         return getCommentsIdList().size
     }
 
     fun getCommentsIdList(): MutableList<String> {
-        return commentsIdList
+        return commentsIdList!!
     }
 
     fun setCommentsIdList(passedQS: MutableList<String>){

@@ -25,7 +25,7 @@ import java.io.File
 
 class QuestionImageAdapter(
         private val context: Context?,
-        private var questionSet: MutableList<String>
+        private var questionSet: HashMap<String, MutableList<String>>
 ) :
         RecyclerView.Adapter<QuestionImageAdapter.ViewHolder>() {
     private lateinit var database: DatabaseReference
@@ -39,7 +39,10 @@ class QuestionImageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var questionId = getQuestionSet().get(position)
+        println("map is " + getQuestionSet())
+
+        var questionId = getQuestionSet().keys.elementAt(position)
+
         database = Firebase.database.reference
 
         database.child("questions").child(questionId).addValueEventListener(object: ValueEventListener{
@@ -68,8 +71,7 @@ class QuestionImageAdapter(
                         }
                     }
 
-                    println("key = " + it.key )
-                    println("value = " + it.value )
+
                 }
             }
 
@@ -126,11 +128,13 @@ class QuestionImageAdapter(
         val commentLayoutManager = LinearLayoutManager(context)
         val commentsRv: RecyclerView = holder.commentsRv
 //        val commentsList: MutableList<String> = prepareCommentArrayList(questionId)
-        var emptyList = mutableListOf<String>("shivam","chaudhary")
+        var emptyList = getQuestionSet().get(questionId)
         commentsAdapter = CommentsAdapter(context,emptyList)
         commentsRv.layoutManager = commentLayoutManager
         commentsRv.itemAnimator = DefaultItemAnimator()
         commentsRv.adapter = commentsAdapter
+
+
     }
 
 //    private fun prepareCommentArrayList(questionId: String): MutableList<String> {
@@ -153,12 +157,11 @@ class QuestionImageAdapter(
         return getQuestionSet().size
     }
 
-    fun getQuestionSet(): MutableList<String> {
+    fun getQuestionSet(): HashMap<String, MutableList<String>> {
         return questionSet
     }
 
-    fun setQuestionSet(passedQS: MutableList<String>){
-
+    fun setQuestionSet(passedQS: HashMap<String, MutableList<String>>){
         questionSet = passedQS
         notifyDataSetChanged()
     }
