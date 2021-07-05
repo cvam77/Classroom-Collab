@@ -121,7 +121,7 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 //        TODO("Not yet implemented")
         database.child("questions").child(questionKey).child("comments").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.questionIDsMap.remove(questionKey)
+                viewModel.questionIDsMap.put(questionKey, mutableListOf())
                 val children = snapshot!!.children
                 children.forEach {
                     if(viewModel.questionIDsMap.containsKey(questionKey)){
