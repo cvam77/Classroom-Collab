@@ -23,6 +23,24 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
 
+/*
+Usually if you go to the second or third level deep inside the app, the screen is divided into two parts:-
+(i). top part is folder part
+(ii). bottom part is question part. The bottom part (the question part) is again divided into (1) top part (image part) and (2) bottom part (comments part)
+
+To visualize, the screen looks like this -
+
+(Top Part) -> Folder Lists
+(Bottom Part) -> Question Lists -> (Question Title, Question Uploaded Time, Question Uploader Email, Question Image)
+                 (Comments)
+
+Question Image Adapter deals with the Bottom Part of the screen:-
+(1) top part (image part):- First, it takes the question id, which is the key of the questionSet (Hashmap) passed to QuestionImageAdapter from other classes.
+It uses this question id to fetch and show the top parts (question title, image part, question uploader email, question uploaded time) of the question.
+(2) bottom part (comments part):- Second, it takes the value of the questionSet (Hashmap) passed to QuestionImageAdapter from other classes. This value
+of hashmap is basically the list of comments for a particular question. Question image adapter just takes this comment lists and passes them to CommentsAdapter
+to show the comments for each question.
+ */
 class QuestionImageAdapter(
         private val context: Context?,
         private var questionSet: HashMap<String, MutableList<String>>

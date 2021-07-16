@@ -21,6 +21,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//In this fragment, we show list all the classes joined by a user using class channel id
+
 class JoinedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
     private lateinit var binding: FragmentJoinedClassesBinding
     private lateinit var createdClassesAdapter: CreatedClassesAdapter
@@ -59,6 +61,7 @@ class JoinedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
         prepareArrayString()
     }
 
+    //Prepare a list of names of joined classes by user
     fun prepareArrayString(){
         viewModel.joinedClassIds.clear()
         val uid = FirebaseAuth.getInstance().currentUser?.uid!!.toString()

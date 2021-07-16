@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//In this fragment, we create a new class channel
 class CreateClassChannelFragment : Fragment() {
 
     val args: CreateClassChannelFragmentArgs by navArgs()
@@ -73,6 +74,7 @@ class CreateClassChannelFragment : Fragment() {
         })
     }
 
+    //Adding the created channel id to Database
     private fun AddChannelToDb(uid: String, randNum: Int, channelName: String) {
         database = Firebase.database.reference
         database.child("users").child(uid).child("created").child(randNum.toString()).setValue("channel_id")

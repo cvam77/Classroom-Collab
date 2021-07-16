@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+//Just a fragment for sign up/ register functionality
 class RegisterFragment : Fragment() {
 
 

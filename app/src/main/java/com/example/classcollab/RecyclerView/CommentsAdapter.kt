@@ -14,6 +14,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+/*
+Comments Adapter acts as an adapter for those recycler views that have been used for all comment sections in the app
+ */
 class CommentsAdapter(
         private val context: Context?,
         private var commentsIdList: MutableList<String>?

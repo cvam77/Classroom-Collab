@@ -15,6 +15,7 @@ import com.example.classcollab.databinding.FragmentMainScreenBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
+//You see this fragment after loggin in for the first time. After that, you will be automatically logged in and brought to this fragment
 class MainScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentMainScreenBinding

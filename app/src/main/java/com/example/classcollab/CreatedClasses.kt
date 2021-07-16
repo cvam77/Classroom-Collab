@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//In this fragment, we show list all the classes created by a user
 class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentCreatedClassesBinding
@@ -63,6 +64,7 @@ class CreatedClasses : Fragment(), CreatedClassesAdapter.OnItemClickListener {
         prepareArrayString()
     }
 
+    //Prepare a list of names of created classes by user
     fun prepareArrayString(){
         viewModel.classNamesVM.clear()
         val uid = FirebaseAuth.getInstance().currentUser?.uid!!.toString()

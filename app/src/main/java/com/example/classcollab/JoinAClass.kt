@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//In this fragment, a user can join a new class channel by entering the correct class channel id
 class JoinAClass : Fragment() {
 
     private lateinit var binding: FragmentJoinAClassBinding
@@ -62,6 +63,7 @@ class JoinAClass : Fragment() {
 
     }
 
+    //This function checks if a channel already exists or not
     fun CheckChannelExist(channelId: String): Boolean
     {
 

@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+//In this adapter, if you pass a MutableList of class IDs, it will just go and fetch the class names from firebase
 class CreatedClassesAdapter(
         private var dataset: MutableList<String>,
         private val context: Context?,

@@ -38,6 +38,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 
+//You come to this Fragment if you go to an individual class and then click on ony option. For example, if you click on "assignments" or "tests" or
+//"book", you come to this class
 class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentAssignmentFieldBinding
@@ -117,6 +119,8 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         })
     }
 
+    //If you pass a question id to this method, it will just go and grab all the comments in this questions ids and put them in hashmap
+    //where key is question id and value is a list of comments
     private fun prepareCommentsIdList(questionKey: String) {
 //        TODO("Not yet implemented")
         database.child("questions").child(questionKey).child("comments").addValueEventListener(object: ValueEventListener{
@@ -145,6 +149,11 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         })
     }
 
+    /*
+    This method just prepares a list of question ids that needs to be viewed in this fragment and puts them in a hashmap
+    where key is question id and value is a list of comments
+    it also calls the method that puts list of comments in the hashmap according to questionIds(key of hashmap)
+     */
     private fun prepareQuestionIdList() {
         database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child("actual_question").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -194,6 +203,9 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 //        })
     }
 
+    //If you click on either "add a new folder" or "add a new question"->"upload from gallery" or "upload from camera"
+    // or "type the question" button, you will get a dialogBox
+    //opened in this method
     fun OpenDialogBox(dialogTitle: String, dialogOption: String){
         val builder = AlertDialog.Builder(context)
         val inflater = layoutInflater
@@ -242,6 +254,7 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
     }
 
 
+    //If you click on "add a question" button -> and then, one of the popup options, this method is triggered
     fun popUpClicked(option: String){
 
         if(option.equals("Upload From Gallery")){
@@ -249,6 +262,7 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         }
     }
 
+    //Upload an image from the gallery
     private fun UploadFromGallery() {
         val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.INTERNAL_CONTENT_URI)
 //        intent.type = "images/*"
@@ -256,6 +270,7 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         startActivityForResult(intent,100)
     }
 
+    //Upload the image selected from gallery to firebase
     private fun UploadToFirebase(imgUri: String){
         val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
         val now = Date()
@@ -304,6 +319,7 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
         }
     }
 
+    //Prepare the list of folder names. This list is later to be used by level adapter
     fun prepareLevelString(){
         database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {

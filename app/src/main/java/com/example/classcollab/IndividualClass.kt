@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
+//This fragment just shows an individual class
 class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentIndividualClassBinding
@@ -94,6 +94,7 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
 
     }
 
+    //If you click "add a new folder" button, this method opens up a dialog box
     fun OpenDialogBox(){
         val builder = AlertDialog.Builder(context)
         val inflater = layoutInflater
@@ -113,6 +114,7 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
         }
     }
 
+    //Prepare a list of default folders ("assignments","tests","book") and custom folders created by user
     fun prepareLevelString(){
         database.child("channels").child(arguments.classId).addValueEventListener(object:
             ValueEventListener {

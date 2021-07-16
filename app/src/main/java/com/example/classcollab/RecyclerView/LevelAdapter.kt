@@ -8,6 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.R
 
+/*Usually if you go to the second or third level deep inside the app, the screen is divided into two parts - top part is folder part and the bottom part is
+question part.
+LevelAdapter is an adapter where you pass a mutable list of folder names (top part) and the recycle view uses this adapter to show the folder names
+ */
 class LevelAdapter (
         private var dataset: MutableList<String>,
         private val context: Context?,

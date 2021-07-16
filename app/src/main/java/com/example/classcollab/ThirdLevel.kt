@@ -23,6 +23,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+/*
+This fragment just shows the data that's in the third level of the firebase.
+    Level starts "After" class id. So, for example,
+    for a particular class with a unique id, "book" is level 1, "chapters" of the book is level 2, "question numbers" of the chapter
+    is level 3. So, thirdlevelStrings just holds any string in the third level of the firebase.
+    It is done this way, so that same code can be used for different sections of a class: tests, assignments, book, Misc. All of these sections have
+    their own levels that start after the class id.
+*/
+
 class ThirdLevel : Fragment(), LevelAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentThirdLevelBinding
@@ -71,6 +80,7 @@ class ThirdLevel : Fragment(), LevelAdapter.OnItemClickListener {
         })
     }
 
+    //If you click on either "add a new folder", you will get a dialogBox opened in this method
     fun OpenDialogBox(){
         val builder = AlertDialog.Builder(context)
         val inflater = layoutInflater
@@ -90,6 +100,7 @@ class ThirdLevel : Fragment(), LevelAdapter.OnItemClickListener {
         }
     }
 
+    //prepare a list of folder names to be view in this screen. This list is to be passed to level adapter
     fun prepareLevelString(){
         database.child("channels").child(arguments.classId).child(arguments.levelOneBranch).child(arguments.levelTwoBranch).addValueEventListener(object:
             ValueEventListener {
