@@ -1,17 +1,11 @@
 package com.example.classcollab
 
-import android.app.ActionBar
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -102,11 +96,12 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
         val edittext = dialogLayout.findViewById<EditText>(R.id.enter_name_edittext)
 
         with(builder){
-            setTitle("Enter the new section name")
+            setTitle("Enter the new question title")
             setPositiveButton("OK"){dialog, which ->
-                val firstLevel = edittext.text.toString()
-                database.child("channels").child(arguments.classId).child(firstLevel).setValue("nothing")
-
+                val questionTitleEntered = edittext.text.toString()
+                val key = database.child("channels").child(arguments.classId).child("questions").push().key
+                database.child("channels").child(arguments.classId).child("questions").child(key!!).setValue(questionTitleEntered)
+                database.child("questions").child(key).child("question_title").setValue(questionTitleEntered)
             }
             setNegativeButton("Cancel"){dialog,which->}
             setView(dialogLayout)
@@ -114,15 +109,15 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
         }
     }
 
-    //Prepare a list of default folders ("assignments","tests","book") and custom folders created by user
+    //Prepare a list of question titles here (...to be implemented here)
     fun prepareLevelString(){
-        database.child("channels").child(arguments.classId).addValueEventListener(object:
+        database.child("channels").child(arguments.classId).child("questions").addValueEventListener(object:
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 viewModel.assignmentTopic.clear()
                 val children = snapshot!!.children
                 children.forEach {
-                    if(!(it.key.toString().equals("channel_name")))
+
                     viewModel.assignmentTopic.add(it.key.toString())
                     viewModel.assignmentTopicVM.value = viewModel.assignmentTopic
                 }

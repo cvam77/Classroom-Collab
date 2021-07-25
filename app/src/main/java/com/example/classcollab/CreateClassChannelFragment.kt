@@ -80,10 +80,10 @@ class CreateClassChannelFragment : Fragment() {
         database.child("users").child(uid).child("created").child(randNum.toString()).setValue("channel_id")
 
         database.child("channels").child(randNum.toString()).child("channel_name").setValue(channelName)
-        database.child("channels").child(randNum.toString()).child("book").child("chapter 1").child("question 1").setValue("nothing")
-        database.child("channels").child(randNum.toString()).child("assignments").child("assignment 1").child("question 1").setValue("nothing")
-        database.child("channels").child(randNum.toString()).child("tests").child("test 1").child("question 1").setValue("nothing")
-        database.child("channels").child(randNum.toString()).child("misc").child("question 1").setValue("nothing")
+//        database.child("channels").child(randNum.toString()).child("book").child("chapter 1").child("question 1").setValue("nothing")
+//        database.child("channels").child(randNum.toString()).child("assignments").child("assignment 1").child("question 1").setValue("nothing")
+//        database.child("channels").child(randNum.toString()).child("tests").child("test 1").child("question 1").setValue("nothing")
+//        database.child("channels").child(randNum.toString()).child("misc").child("question 1").setValue("nothing")
 
     }
 
