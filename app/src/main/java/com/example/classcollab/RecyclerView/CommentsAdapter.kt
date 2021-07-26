@@ -1,6 +1,7 @@
 package com.example.classcollab.RecyclerView
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.File
 
 /*
 Comments Adapter acts as an adapter for those recycler views that have been used for all comment sections in the app
@@ -24,7 +28,7 @@ class CommentsAdapter(
         RecyclerView.Adapter<CommentsAdapter.ViewHolder>()
 {
     private lateinit var database: DatabaseReference
-
+    private lateinit var storageReference: StorageReference
 
 //    private lateinit var storageReference: StorageReference
 
@@ -35,15 +39,31 @@ class CommentsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         database = Firebase.database.reference
-        val commentId = commentsIdList!!.get(position)
+        val commentId = getCommentsIdList().get(position)
 
         database.child("comments").child(commentId).addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val children = snapshot!!.children
                 children.forEach {
-                    if(it.key.toString().equals("comment")){
+                    if(it.key.toString().equals("commenter")){
+                        holder.commenter.setText(it.value.toString())
+                    }
+                    if(it.key.toString().equals("actual_comment")){
                         holder.eachCommentTv.setText(it.value.toString())
                     }
+                    if(it.key.toString().equals("image")){
+                        val fileName = it.value
+                        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+
+                        val localfile = File.createTempFile("tempImage","jpg")
+                        storageReference.getFile(localfile).addOnSuccessListener {
+                            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+                            holder.commentPic.setImageBitmap(bitmap)
+                        }.addOnFailureListener{
+                            Toast.makeText(context,"Failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
                 }
             }
 
@@ -74,5 +94,9 @@ class CommentsAdapter(
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val eachCommentTv = view.findViewById<TextView>(R.id.each_comment_tv)
+        val commenter = view.findViewById<TextView>(R.id.commenter_tv)
+
+        val commentTime = view.findViewById<TextView>(R.id.comment_time_tv)
+        val commentPic = view.findViewById<ImageView>(R.id.iv_single_comment_pic)
     }
 }

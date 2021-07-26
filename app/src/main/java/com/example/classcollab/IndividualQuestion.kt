@@ -1,23 +1,33 @@
 package com.example.classcollab
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.classcollab.RecyclerView.QuestionImageAdapter
+import com.example.classcollab.RecyclerView.CommentsAdapter
 import com.example.classcollab.databinding.FragmentIndividualQuestionBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -30,9 +40,9 @@ class IndividualQuestion : Fragment() {
     private lateinit var binding: FragmentIndividualQuestionBinding
     private lateinit var database: DatabaseReference
     lateinit var viewModel: ArrayStringViewModel
-    private lateinit var questionImageAdapter: QuestionImageAdapter
+    private lateinit var commentsAdapter: CommentsAdapter
     val arguments: IndividualQuestionArgs by navArgs()
-    lateinit var ImageUri : Uri
+    var ImageUri : Uri? = null
     private lateinit var storageReference: StorageReference
 
 
@@ -48,24 +58,107 @@ class IndividualQuestion : Fragment() {
         return inflater.inflate(R.layout.fragment_individual_question, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentIndividualQuestionBinding.bind(view)
         database = Firebase.database.reference
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
-        val recyclerView: RecyclerView = binding.rvIndivQuestions
         var emptyList = mutableListOf<String>()
+        commentsAdapter = CommentsAdapter(context,emptyList)
+        val recyclerView: RecyclerView = binding.rvIndivQuestions
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.adapter = commentsAdapter
 
-        binding.moreOptionsPopup.setOnClickListener({
-            val popup = PopupMenu(context,binding.moreOptionsPopup)
+        viewModel.indivCommentIdsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            commentsAdapter.setCommentsIdList(it)
+        })
+
+        binding.moreOptionsPopup.setOnClickListener {
+            val popup = PopupMenu(context, binding.moreOptionsPopup)
             popup.inflate(R.menu.add_question_menu)
             popup.setOnMenuItemClickListener {
                 popUpClicked(it.title as String)
                 true
             }
             popup.show()
+        }
+
+        binding.btnSend.setOnClickListener(View.OnClickListener {
+            binding.ivPhotoComment.setImageDrawable(null)
+
+            AddCommentToFirebase()
         })
+
+        PrepareCommentIdList()
+    }
+
+    private fun PrepareCommentIdList() {
+        database.child("questions").child(arguments.questionId).child("comments").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                viewModel.indivCommentIds.clear()
+                val children = snapshot!!.children
+
+                children.forEach{
+                    viewModel.indivCommentIds.add(it.key.toString())
+                }
+                viewModel.indivCommentIdsVM.value = viewModel.indivCommentIds
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    //Adding comment to firebase - both to questions and comments branches
+    fun AddCommentToFirebase() {
+        val enteredComment: String = binding.etType.text.toString().trim{it <= ' '}
+        //this line is executed only if at least one of edittext or imageuri is not null
+        if(!(TextUtils.isEmpty(enteredComment) && ImageUri == null)){
+
+            val path = database.child("questions").child(arguments.questionId).child("comments")
+            val actualCommentKey = path.push().key.toString()
+
+            path.child(actualCommentKey).setValue("true")
+
+            val currentUser = FirebaseAuth.getInstance().currentUser?.email
+
+            val commentPath = database.child("comments").child(actualCommentKey)
+            commentPath.child("commenter").setValue(currentUser)
+            if(ImageUri != null)
+            {
+                val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
+                val now = Date()
+                var fileName = formatter.format(now)
+                storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+
+                storageReference.putFile(ImageUri!!).addOnSuccessListener {
+                    commentPath.child("image").setValue(fileName)
+
+                }.addOnFailureListener{
+                    Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
+                }
+
+                ImageUri = null
+            }
+
+            if(!TextUtils.isEmpty(enteredComment) )
+            {
+                commentPath.child("actual_comment").setValue(enteredComment)
+                binding.etType.setText("")
+
+                //Making keyboard disappear
+                val mgr: InputMethodManager =
+                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                mgr.hideSoftInputFromWindow(binding.etType.getWindowToken(), 0)
+
+            }
+        }
     }
 
     //If you click on "..." textview -> and then, one of the popup options, this method is triggered
@@ -106,40 +199,41 @@ class IndividualQuestion : Fragment() {
 
     }
 
-    //Upload the image selected from gallery to firebase
-    private fun UploadToFirebase(imgUri: String){
-        val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
-        val now = Date()
-        var fileName = formatter.format(now)
-        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
-
-        if(ImageUri != null)
-        {
-            storageReference.putFile(ImageUri).addOnSuccessListener {
-                Toast.makeText(context,"Successfully uploaded", Toast.LENGTH_SHORT).show()
-
-//            val path = database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child("actual_question")
-                val path = database.child("questions").child(arguments.questionId).child("comments")
-                val actualCommentKey = path.push().key
-
-                val currentUser = FirebaseAuth.getInstance().currentUser?.email
-                if (actualCommentKey != null) {
-                    path.child(actualCommentKey).setValue("true")
-//                val map = mapOf(fileName to currentUser)
-//                database.child("questions").child(actualCommentKey).child("image").setValue(map)
+//    //Upload the image selected from gallery to firebase
+//    private fun UploadToFirebase(){
+//        val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
+//        val now = Date()
+//        var fileName = formatter.format(now)
+//        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
 //
-                    database.child("comments").child(actualCommentKey).child("image").setValue(fileName)
-                    database.child("comments").child(actualCommentKey).child("commenter").setValue(currentUser)
-
-
-//                setImageView(fileName)
-                }
-
-            }.addOnFailureListener{
-                Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    }
+//        if(ImageUri != null)
+//        {
+//            storageReference.putFile(ImageUri!!).addOnSuccessListener {
+//                Toast.makeText(context,"Successfully uploaded", Toast.LENGTH_SHORT).show()
+//
+////            val path = database.child("channels").child(arguments.classId).child(arguments.assignmentFieldType).child("actual_question")
+//
+//                val path = database.child("questions").child(arguments.questionId).child("comments")
+//                val actualCommentKey = path.push().key
+//
+//                val currentUser = FirebaseAuth.getInstance().currentUser?.email
+//                if (actualCommentKey != null) {
+//                    path.child(actualCommentKey).setValue("true")
+////                val map = mapOf(fileName to currentUser)
+////                database.child("questions").child(actualCommentKey).child("image").setValue(map)
+////
+//                    database.child("comments").child(actualCommentKey).child("image").setValue(fileName)
+//                    database.child("comments").child(actualCommentKey).child("commenter").setValue(currentUser)
+//
+//
+////                setImageView(fileName)
+//                }
+//
+//            }.addOnFailureListener{
+//                Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//    }
 
 }

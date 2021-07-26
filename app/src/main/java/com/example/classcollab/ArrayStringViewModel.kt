@@ -6,6 +6,12 @@ import androidx.lifecycle.ViewModel
 //Just a viewmodel for this app
 class ArrayStringViewModel : ViewModel(){
 
+    //List of commentIds
+    var indivCommentIds = mutableListOf<String>()
+    val indivCommentIdsVM : MutableLiveData<MutableList<String>> by lazy {
+        MutableLiveData<MutableList<String>>()
+    }
+
     //List of question ids
     var questionIDsMap = HashMap<String,MutableList<String>>()
     val questionIDsMapVM : MutableLiveData<HashMap<String, MutableList<String>>> by lazy {
