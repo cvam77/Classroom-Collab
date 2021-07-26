@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.RecyclerView.LevelAdapter
 import com.example.classcollab.databinding.FragmentIndividualClassBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -98,10 +99,12 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
         with(builder){
             setTitle("Enter the new question title")
             setPositiveButton("OK"){dialog, which ->
+                val uid = FirebaseAuth.getInstance().uid
                 val questionTitleEntered = edittext.text.toString()
                 val key = database.child("channels").child(arguments.classId).child("questions").push().key
                 database.child("channels").child(arguments.classId).child("questions").child(key!!).setValue(questionTitleEntered)
                 database.child("questions").child(key).child("question_title").setValue(questionTitleEntered)
+                database.child("questions").child(key).child("questioner").setValue(uid)
             }
             setNegativeButton("Cancel"){dialog,which->}
             setView(dialogLayout)
@@ -132,7 +135,8 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
 
     override fun onItemClick(position: String) {
 //        TODO("Not yet implemented")
-        val action = IndividualClassDirections.actionIndividualClassToAssignmentField(arguments.classId,position)
+//        val action = IndividualClassDirections.actionIndividualClassToAssignmentField(arguments.classId,position)
+        val action = IndividualClassDirections.actionIndividualClassToIndividualQuestion(position)
         view?.let { Navigation.findNavController(it).navigate(action) }
     }
 

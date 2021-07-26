@@ -102,6 +102,9 @@
         <action
             android:id="@+id/action_individualClass_to_assignmentField"
             app:destination="@id/assignmentField" />
+        <action
+            android:id="@+id/action_individualClass_to_individualQuestion"
+            app:destination="@id/individualQuestion" />
     </fragment>
     <fragment
         android:id="@+id/assignmentField"
@@ -130,6 +133,15 @@
             app:argType="string" />
         <argument
             android:name="levelTwoBranch"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/individualQuestion"
+        android:name="com.example.classcollab.IndividualQuestion"
+        android:label="fragment_individual_question"
+        tools:layout="@layout/fragment_individual_question" >
+        <argument
+            android:name="questionId"
             app:argType="string" />
     </fragment>
 </navigation>

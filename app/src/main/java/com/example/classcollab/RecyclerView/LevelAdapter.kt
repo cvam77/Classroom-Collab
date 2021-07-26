@@ -7,6 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 /*Usually if you go to the second or third level deep inside the app, the screen is divided into two parts - top part is folder part and the bottom part is
 question part.
@@ -18,6 +24,7 @@ class LevelAdapter (
         private var listener: LevelAdapter.OnItemClickListener
         ) : RecyclerView.Adapter<LevelAdapter.ViewHolder>()
 {
+    private var database: DatabaseReference = Firebase.database.reference
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.each_createdclass_layout,parent,false)
@@ -26,8 +33,18 @@ class LevelAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var string = getDataset().get(position)
-        holder.textView.text = string
+        var questionId = getDataset().get(position)
+        database.child("questions").child(questionId).child("question_title").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                holder.textView.text = snapshot.value.toString()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+            }
+
+        })
+
     }
 
     override fun getItemCount(): Int {
