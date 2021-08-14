@@ -53,12 +53,19 @@ class CommentsAdapter(
                     }
                     if(it.key.toString().equals("image")){
                         val fileName = it.value
+                        //comment time
+                        holder.commentTime.setText(fileName.toString())
+
                         storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
 
                         val localfile = File.createTempFile("tempImage","jpg")
                         storageReference.getFile(localfile).addOnSuccessListener {
                             val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+
+                            //comment picture
+                            holder.commentPic.visibility=View.VISIBLE
                             holder.commentPic.setImageBitmap(bitmap)
+
                         }.addOnFailureListener{
                             Toast.makeText(context,"Failed", Toast.LENGTH_SHORT).show()
                         }

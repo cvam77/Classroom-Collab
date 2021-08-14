@@ -2,18 +2,22 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/comment_time_tv"
+        android:text="2pm"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/commenter_tv"
+        android:text="Shivam"
         />
 
     <TextView
@@ -23,14 +27,17 @@
         android:background="@color/purple_500"
         android:textColor="@color/white"
         android:gravity="center"
-        android:text=""
+        android:text="nice pic dear"
         android:textSize="20sp"
         android:layout_margin="3dp"
+        android:padding="5dp"
         />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
         android:id="@+id/iv_single_comment_pic"
+        android:visibility="gone"
+        android:scaleType="fitXY"
         />
 </LinearLayout>
