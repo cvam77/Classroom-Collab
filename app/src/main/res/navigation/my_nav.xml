@@ -143,5 +143,17 @@
         <argument
             android:name="questionId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_individualQuestion_to_viewIndividualImage"
+            app:destination="@id/viewIndividualImage" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewIndividualImage"
+        android:name="com.example.classcollab.ViewIndividualImage"
+        android:label="fragment_view_individual_image"
+        tools:layout="@layout/fragment_view_individual_image" >
+        <argument
+            android:name="fileName"
+            app:argType="string" />
     </fragment>
 </navigation>

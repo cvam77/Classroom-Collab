@@ -346,6 +346,8 @@ class AssignmentField : Fragment(), LevelAdapter.OnItemClickListener {
 //        TODO("Not yet implemented")
         val action = AssignmentFieldDirections.actionAssignmentFieldToThirdLevel(arguments.classId,arguments.assignmentFieldType,position)
         view?.let { Navigation.findNavController(it).navigate(action) }
+
+
     }
 
 

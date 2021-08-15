@@ -147,7 +147,7 @@ class QuestionImageAdapter(
         val commentsRv: RecyclerView = holder.commentsRv
 //        val commentsList: MutableList<String> = prepareCommentArrayList(questionId)
         var emptyList = getQuestionSet().get(questionId)
-        commentsAdapter = CommentsAdapter(context,emptyList)
+//        commentsAdapter = CommentsAdapter(context,emptyList,this)
         commentsRv.layoutManager = commentLayoutManager
         commentsRv.itemAnimator = DefaultItemAnimator()
         commentsRv.adapter = commentsAdapter

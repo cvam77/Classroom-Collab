@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupMenu
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -35,7 +36,7 @@ import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
 import java.util.*
 
-class IndividualQuestion : Fragment() {
+class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 
     private lateinit var binding: FragmentIndividualQuestionBinding
     private lateinit var database: DatabaseReference
@@ -66,7 +67,7 @@ class IndividualQuestion : Fragment() {
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
         var emptyList = mutableListOf<String>()
-        commentsAdapter = CommentsAdapter(context,emptyList)
+        commentsAdapter = CommentsAdapter(context,emptyList, this)
         val recyclerView: RecyclerView = binding.rvIndivQuestions
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
@@ -76,6 +77,8 @@ class IndividualQuestion : Fragment() {
         viewModel.indivCommentIdsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             commentsAdapter.setCommentsIdList(it)
         })
+
+
 
         binding.moreOptionsPopup.setOnClickListener {
             val popup = PopupMenu(context, binding.moreOptionsPopup)
@@ -88,12 +91,19 @@ class IndividualQuestion : Fragment() {
         }
 
         binding.btnSend.setOnClickListener(View.OnClickListener {
-            binding.ivPhotoComment.setImageDrawable(null)
-
+            binding.ivPhotoComment.setImageURI(null)
+            binding.ivPhotoComment.visibility = View.GONE
             AddCommentToFirebase()
         })
 
         PrepareCommentIdList()
+
+        var scrollView: ScrollView = binding.scrollLayout
+        scrollView.postDelayed(
+            {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+            }, 1000
+        )
     }
 
     private fun PrepareCommentIdList() {
@@ -197,6 +207,10 @@ class IndividualQuestion : Fragment() {
         binding.ivPhotoComment.visibility = View.VISIBLE
         binding.ivPhotoComment.setImageURI(ImageUri)
 
+    }
+
+    override fun onItemClick(position: String) {
+//        TODO("Not yet implemented")
     }
 
 //    //Upload the image selected from gallery to firebase

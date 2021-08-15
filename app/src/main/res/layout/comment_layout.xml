@@ -10,14 +10,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/comment_time_tv"
-        android:text="2pm"
+        android:text=""
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/commenter_tv"
-        android:text="Shivam"
+        android:text=""
         />
 
     <TextView
@@ -27,7 +27,7 @@
         android:background="@color/purple_500"
         android:textColor="@color/white"
         android:gravity="center"
-        android:text="nice pic dear"
+        android:text=""
         android:textSize="20sp"
         android:layout_margin="3dp"
         android:padding="5dp"

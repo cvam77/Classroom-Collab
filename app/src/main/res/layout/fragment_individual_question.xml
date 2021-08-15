@@ -6,76 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".IndividualQuestion">
 
-    <ScrollView
-        android:id="@+id/scrollLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_indiv_questions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                 />
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:layout_weight="7"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <LinearLayout
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_indiv_questions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="bottom"
-                    android:gravity="center"
-                    >
-
-                    <TextView
-                        android:layout_width="20dp"
-                        android:layout_height="40dp"
-                        android:text="..."
-                        android:gravity="center"
-                        android:background="@color/purple_500"
-                        android:id="@+id/more_options_popup"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:padding="1dp"
-                        />
-
-                    <EditText
-                        android:id="@+id/et_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="Type here..."
-                        android:layout_margin="5dp"
-
-                        />
-
-                    <Button
-                        android:id="@+id/btn_send"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="->"
-                        android:layout_margin="5dp"
-                        />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_photo_comment"
+                    android:layout_margin="10dp"
                     />
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@color/white"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="40dp"
+                    android:text="..."
+                    android:gravity="center"
+                    android:background="@color/purple_500"
+                    android:id="@+id/more_options_popup"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:padding="1dp"
+                    />
+
+                <EditText
+                    android:id="@+id/et_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Type here..."
+                    android:layout_margin="5dp"
+
+                    />
+
+                <Button
+                    android:id="@+id/btn_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="->"
+                    android:layout_margin="5dp"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/iv_photo_comment"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
 </FrameLayout>
