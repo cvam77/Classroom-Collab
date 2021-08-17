@@ -3,6 +3,8 @@ package com.example.classcollab
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +18,7 @@ import android.widget.PopupMenu
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -33,6 +36,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -177,6 +181,33 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         if(option.equals("Upload From Gallery")){
             UploadFromGallery()
         }
+        else if(option.equals("Take Picture and Upload")){
+            TakePicture()
+        }
+    }
+
+    //take picture
+    private fun TakePicture(){
+        if (context?.let { ActivityCompat.checkSelfPermission(it,android.Manifest.permission.CAMERA) } != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(context as Activity, arrayOf(android.Manifest.permission.CAMERA),200)
+        } else{
+            var i = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(i,201)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == 200 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        {
+
+
+        }
     }
 
     //Upload an image from the gallery
@@ -194,15 +225,53 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         {
             ImageUri = data?.data!!
             setCommentImageView(ImageUri.toString())
+        } else if(requestCode == 201 && resultCode == Activity.RESULT_OK){
+//            ImageUri = data?.data
+//            setCommentImageView(ImageUri.toString())
+            onCapureImageResult(data)
         }
     }
 
-    //set the image selected from gallery to comment imageview
-    private fun setCommentImageView(imgUri: String){
+    private fun onCapureImageResult(data: Intent?) {
+        val thumbnail = data!!.extras!!["data"] as Bitmap?
+        val bytes = ByteArrayOutputStream()
+        thumbnail!!.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+        val bb = bytes.toByteArray()
+        addCapturedImageToFirebase(bb)
+    }
+
+    public fun addCapturedImageToFirebase(bb: ByteArray) {
+//        val s = String(bb, charset("UTF-8"))
+//        val uri = Uri.parse(s)
+//        ImageUri = uri
+
         val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
         val now = Date()
         var fileName = formatter.format(now)
-        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+        storageReference = FirebaseStorage.getInstance().getReference("captured_images/$fileName")
+
+        storageReference.putBytes(bb).addOnSuccessListener {
+            Toast.makeText(context,"Success!", Toast.LENGTH_SHORT).show()
+
+
+
+//            val url = it?.downloadUrl
+//            ImageUri = it
+
+
+
+        }.addOnFailureListener{
+            Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    //set the image selected from gallery to comment imageview
+    private fun setCommentImageView(imgUri: String){
+//        val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
+//        val now = Date()
+//        var fileName = formatter.format(now)
+//        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
 
         binding.ivPhotoComment.visibility = View.VISIBLE
         binding.ivPhotoComment.setImageURI(ImageUri)
