@@ -32,95 +32,98 @@ This fragment just shows the data that's in the third level of the firebase.
     their own levels that start after the class id.
 */
 
-class ThirdLevel : Fragment(), LevelAdapter.OnItemClickListener {
+        //IT'S ASSUMED THAT THIS CLASS IS UNUSED
 
-    private lateinit var binding: FragmentThirdLevelBinding
-    private lateinit var database: DatabaseReference
-    lateinit var viewModel: ArrayStringViewModel
-    private lateinit var levelAdapter: LevelAdapter
-    val arguments: ThirdLevelArgs by navArgs()
+//class ThirdLevel : Fragment(), LevelAdapter.OnItemClickListener {
+class ThirdLevel : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_third_level, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding = FragmentThirdLevelBinding.bind(view)
-        database = Firebase.database.reference
-
-        viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
-
-
-        val recyclerView: RecyclerView = binding.rvCreatedClasses
-        var emptyList = mutableListOf<String>()
-
-        levelAdapter = LevelAdapter(emptyList,context,this)
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = levelAdapter
-
-        viewModel.thirdLevelStringsVM.observe(viewLifecycleOwner, Observer {
-            levelAdapter.setDataset(it)
-        })
-
-        prepareLevelString()
-
-        binding.addFolder.setOnClickListener(View.OnClickListener {
-            OpenDialogBox()
-        })
-    }
-
-    //If you click on either "add a new folder", you will get a dialogBox opened in this method
-    fun OpenDialogBox(){
-        val builder = AlertDialog.Builder(context)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.enter_name_et,null)
-        val edittext = dialogLayout.findViewById<EditText>(R.id.enter_name_edittext)
-
-        with(builder){
-            setTitle("Enter the new section name")
-            setPositiveButton("OK"){dialog, which ->
-                val thirdLevel = edittext.text.toString()
-                database.child("channels").child(arguments.classId).child(arguments.levelOneBranch).child(arguments.levelTwoBranch).child(thirdLevel).setValue("nothing")
-
-            }
-            setNegativeButton("Cancel"){dialog,which->}
-            setView(dialogLayout)
-            show()
-        }
-    }
-
-    //prepare a list of folder names to be view in this screen. This list is to be passed to level adapter
-    fun prepareLevelString(){
-        database.child("channels").child(arguments.classId).child(arguments.levelOneBranch).child(arguments.levelTwoBranch).addValueEventListener(object:
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.thirdLevelStrings.clear()
-                val children = snapshot!!.children
-                children.forEach {
-                    viewModel.thirdLevelStrings.add(it.key.toString())
-                    viewModel.thirdLevelStringsVM.value = viewModel.thirdLevelStrings
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-            }
-
-        })
-    }
-
-    override fun onItemClick(position: String) {
-//        TODO("Not yet implemented")
-    }
+//    private lateinit var binding: FragmentThirdLevelBinding
+//    private lateinit var database: DatabaseReference
+//    lateinit var viewModel: ArrayStringViewModel
+//    private lateinit var levelAdapter: LevelAdapter
+//    val arguments: ThirdLevelArgs by navArgs()
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//    }
+//
+//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+//                              savedInstanceState: Bundle?): View? {
+//        // Inflate the layout for this fragment
+//        return inflater.inflate(R.layout.fragment_third_level, container, false)
+//    }
+//
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        binding = FragmentThirdLevelBinding.bind(view)
+//        database = Firebase.database.reference
+//
+//        viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
+//
+//
+//        val recyclerView: RecyclerView = binding.rvCreatedClasses
+//        var emptyList = mutableListOf<String>()
+//
+//        levelAdapter = LevelAdapter(emptyList,context,this)
+//        val layoutManager = LinearLayoutManager(context)
+//        recyclerView.layoutManager = layoutManager
+//        recyclerView.itemAnimator = DefaultItemAnimator()
+//        recyclerView.adapter = levelAdapter
+//
+//        viewModel.thirdLevelStringsVM.observe(viewLifecycleOwner, Observer {
+//            levelAdapter.setDataset(it)
+//        })
+//
+//        prepareLevelString()
+//
+//        binding.addFolder.setOnClickListener(View.OnClickListener {
+//            OpenDialogBox()
+//        })
+//    }
+//
+//    //If you click on either "add a new folder", you will get a dialogBox opened in this method
+//    fun OpenDialogBox(){
+//        val builder = AlertDialog.Builder(context)
+//        val inflater = layoutInflater
+//        val dialogLayout = inflater.inflate(R.layout.enter_name_et,null)
+//        val edittext = dialogLayout.findViewById<EditText>(R.id.enter_name_edittext)
+//
+//        with(builder){
+//            setTitle("Enter the new section name")
+//            setPositiveButton("OK"){dialog, which ->
+//                val thirdLevel = edittext.text.toString()
+//                database.child("channels").child(arguments.classId).child(arguments.levelOneBranch).child(arguments.levelTwoBranch).child(thirdLevel).setValue("nothing")
+//
+//            }
+//            setNegativeButton("Cancel"){dialog,which->}
+//            setView(dialogLayout)
+//            show()
+//        }
+//    }
+//
+//    //prepare a list of folder names to be view in this screen. This list is to be passed to level adapter
+//    fun prepareLevelString(){
+//        database.child("channels").child(arguments.classId).child(arguments.levelOneBranch).child(arguments.levelTwoBranch).addValueEventListener(object:
+//            ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                viewModel.thirdLevelStrings.clear()
+//                val children = snapshot!!.children
+//                children.forEach {
+//                    viewModel.thirdLevelStrings.add(it.key.toString())
+//                    viewModel.thirdLevelStringsVM.value = viewModel.thirdLevelStrings
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+////                TODO("Not yet implemented")
+//            }
+//
+//        })
+//    }
+//
+//    override fun onItemClick(position: String) {
+////        TODO("Not yet implemented")
+//    }
 }

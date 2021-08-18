@@ -25,8 +25,8 @@ class ArrayStringViewModel : ViewModel(){
     }
 
     //Names of topics you show when you open an individual class - tests, assignments, book, Misc
-    var assignmentTopic = mutableListOf<String>()
-    val assignmentTopicVM : MutableLiveData<MutableList<String>> by lazy {
+    var questionTopic = mutableListOf<String>()
+    val questionTopicVM : MutableLiveData<MutableList<String>> by lazy {
         MutableLiveData<MutableList<String>>()
     }
 

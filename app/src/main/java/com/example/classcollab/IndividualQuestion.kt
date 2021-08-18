@@ -104,6 +104,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 
             binding.ivPhotoComment.visibility = View.GONE
             AddCommentToFirebase()
+            recyclerView.scrollToPosition(commentsAdapter.itemCount-1)
         })
 
         PrepareCommentIdList()
@@ -292,6 +293,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
                 Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
             }
             .addOnCompleteListener{snapshot ->
+                
                 val downloadURL: Task<Uri>? = snapshot.result?.storage?.downloadUrl
                 while(!downloadURL?.isComplete!!)
                 {

@@ -63,7 +63,7 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = levelAdapter
 
-        viewModel.assignmentTopicVM.observe(viewLifecycleOwner, Observer {
+        viewModel.questionTopicVM.observe(viewLifecycleOwner, Observer {
             levelAdapter.setDataset(it)
         })
 
@@ -117,12 +117,12 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
         database.child("channels").child(arguments.classId).child("questions").addValueEventListener(object:
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.assignmentTopic.clear()
+                viewModel.questionTopic.clear()
                 val children = snapshot!!.children
                 children.forEach {
 
-                    viewModel.assignmentTopic.add(it.key.toString())
-                    viewModel.assignmentTopicVM.value = viewModel.assignmentTopic
+                    viewModel.questionTopic.add(it.key.toString())
+                    viewModel.questionTopicVM.value = viewModel.questionTopic
                 }
             }
 
