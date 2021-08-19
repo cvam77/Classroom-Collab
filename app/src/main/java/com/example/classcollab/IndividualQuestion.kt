@@ -55,7 +55,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
     var ImageUri : Uri? = null
     var ImageByteArray: ByteArray? = null
     private lateinit var storageReference: StorageReference
-
+    var commentIdsListFirebase = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,16 +76,17 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         database = Firebase.database.reference
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
-        var emptyList = mutableListOf<String>()
-        commentsAdapter = CommentsAdapter(context,emptyList, this)
+        commentsAdapter = CommentsAdapter(context,commentIdsListFirebase, this)
         val recyclerView: RecyclerView = binding.rvIndivQuestions
         val layoutManager = LinearLayoutManager(context)
+        layoutManager.stackFromEnd = true
+
         recyclerView.layoutManager = layoutManager
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = commentsAdapter
 
         viewModel.indivCommentIdsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            commentsAdapter.setCommentsIdList(it)
+//            commentsAdapter.setCommentsIdList(it)
         })
 
 
@@ -104,29 +105,54 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 
             binding.ivPhotoComment.visibility = View.GONE
             AddCommentToFirebase()
-            recyclerView.scrollToPosition(commentsAdapter.itemCount-1)
+//            recyclerView.scrollToPosition(commentsAdapter.itemCount-1)
+
+            //scroll to bottom
+            var scrollView: ScrollView = binding.scrollLayout
+            scrollView.postDelayed(
+                {
+                    scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+                }, 1000
+            )
         })
+
+        //scroll to bottom
+//        var scrollView: ScrollView = binding.scrollLayout
+//        scrollView.postDelayed(
+//            {
+//                scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+//            }, 1000
+//        )
 
         PrepareCommentIdList()
 
-        var scrollView: ScrollView = binding.scrollLayout
-        scrollView.postDelayed(
-            {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN)
-            }, 1000
-        )
+
     }
 
     private fun PrepareCommentIdList() {
+//        commentIdsListFirebase.clear()
         database.child("questions").child(arguments.questionId).child("comments").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                viewModel.indivCommentIds.clear()
+                    //Commenting viewmodel part
+//                viewModel.indivCommentIds.clear()
+//                val children = snapshot!!.children
+//
+//                children.forEach{
+//                    viewModel.indivCommentIds.add(it.key.toString())
+//                }
+//                viewModel.indivCommentIdsVM.value = viewModel.indivCommentIds
+
+                //Applying non viewmodel part
                 val children = snapshot!!.children
 
                 children.forEach{
-                    viewModel.indivCommentIds.add(it.key.toString())
+                    if(!commentIdsListFirebase.contains(it.key.toString())){
+                        commentIdsListFirebase.add(it.key.toString())
+                    }
+
                 }
-                viewModel.indivCommentIdsVM.value = viewModel.indivCommentIds
+
+                commentsAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -162,11 +188,12 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
                 storageReference.putFile(ImageUri!!).addOnSuccessListener {
                     commentPath.child("image").setValue(fileName)
 
+
                 }.addOnFailureListener{
                     Toast.makeText(context,"Failed!", Toast.LENGTH_SHORT).show()
                 }
 
-                ImageUri = null
+
             }
 
             if(ImageByteArray != null)
@@ -201,6 +228,10 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 
             }
         }
+
+        binding.ivPhotoComment.setImageURI(null)
+        ImageUri = null
+        ImageByteArray = null
     }
 
     //If you click on "..." textview -> and then, one of the popup options, this method is triggered
@@ -330,5 +361,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
     override fun onItemClick(position: String) {
 //        TODO("Not yet implemented")
     }
+
+
 
 }
