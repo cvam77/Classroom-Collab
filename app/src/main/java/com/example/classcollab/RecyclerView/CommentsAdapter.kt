@@ -23,7 +23,8 @@ import com.google.firebase.storage.StorageReference
 import java.io.File
 
 /*
-Comments Adapter acts as an adapter for those recycler views that have been used for all comment sections in the app
+Comments Adapter acts as an adapter for those recycler views that have been used for
+ all comment sections in the app
  */
 class CommentsAdapter(
         private val context: Context?,

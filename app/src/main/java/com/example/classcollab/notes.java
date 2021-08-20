@@ -9,8 +9,15 @@ import java.io.ByteArrayOutputStream;
 
 public class notes {
 
-//    Next to-do:       1. showing comment time
-//                      2. Highlighting the first comment (actual question)
+//      QuestionImageAdapter - Aug 19th, Thursday
 
+    /*
+      Next to-do: 1. showing comment time
+                  2. Highlighting the first comment (actual question)
+                  3. ValueEventListener - ondatachange should only return one snapshot and not all
+                  4. Passing comment model class instead of commentIds to commentAdapter
+
+
+     */
 
 }
