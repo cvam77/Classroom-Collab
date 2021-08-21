@@ -57,6 +57,9 @@ class CommentsAdapter(
                     if(it.key.toString().equals("actual_comment")){
                         holder.eachCommentTv.setText(it.value.toString())
                     }
+                    if(it.key.toString().equals("comment_time")){
+                        holder.commentTime.setText(it.value.toString())
+                    }
                     if(it.key.toString().equals("image")){
                         val fileName = it.value
                         //comment time

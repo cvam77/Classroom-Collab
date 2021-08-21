@@ -181,6 +181,10 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
             val formatter = SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.getDefault())
             val now = Date()
             var fileName = formatter.format(now)
+
+            //Adding comment time
+            commentPath.child("comment_time").setValue(fileName)
+
             storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
 
             if(ImageUri != null)
