@@ -2,6 +2,8 @@ package com.example.classcollab.RecyclerView
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.graphics.Typeface
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,6 +94,14 @@ class CommentsAdapter(
 
         })
 //        println("comments = " + commentId)
+        if(position==1){
+            holder.eachCommentTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
+            holder.eachCommentTv.setTypeface(Typeface.DEFAULT_BOLD)
+
+            holder.commentPic.layoutParams.height = 350
+            holder.commentPic.layoutParams.width = 350
+
+        }
 
     }
 
