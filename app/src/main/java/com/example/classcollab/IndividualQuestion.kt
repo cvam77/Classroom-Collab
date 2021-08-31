@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.classcollab.RecyclerView.CommentsAdapter
 import com.example.classcollab.databinding.FragmentIndividualQuestionBinding
+import com.example.classcollab.model.CommentModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -56,7 +57,8 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
     var ImageByteArray: ByteArray? = null
     private lateinit var storageReference: StorageReference
     var commentIdsListFirebase = mutableListOf<String>()
-
+    var indivCommentList = mutableListOf<CommentModel>()
+    private var emptySymbolString: String = "empty"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -76,7 +78,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         database = Firebase.database.reference
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
-        commentsAdapter = CommentsAdapter(context,commentIdsListFirebase, this)
+        commentsAdapter = CommentsAdapter(context,indivCommentList, this)
         val recyclerView: RecyclerView = binding.rvIndivQuestions
         val layoutManager = LinearLayoutManager(context)
         layoutManager.stackFromEnd = true
@@ -85,8 +87,8 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.adapter = commentsAdapter
 
-        viewModel.indivCommentIdsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            commentsAdapter.setCommentsIdList(it)
+        viewModel.indivCommentsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+//            commentsAdapter.setIndivCommentsList(it)
         })
 
 
@@ -147,12 +149,17 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 
                 children.forEach{
                     if(!commentIdsListFirebase.contains(it.key.toString())){
+
                         commentIdsListFirebase.add(it.key.toString())
+                        GetActualComment(it.key.toString())
                     }
+//                    commentIdsListFirebase
+
+                    //notes = problem with viewmodel
 
                 }
 
-                commentsAdapter.notifyDataSetChanged()
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -160,6 +167,61 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
             }
 
         })
+    }
+
+    //Get comment using the passed commentId
+    private fun GetActualComment(commentId: String) {
+
+
+        database.child("comments").child(commentId).addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+//                if(viewModel.indivComments.contains())
+                var eachComment = CommentModel()
+                eachComment.commentId = commentId
+                val children = snapshot!!.children
+
+                children.forEach {
+
+
+                    if(it.key.toString().equals("commenter")){
+                        eachComment.commenter=it.value.toString()
+                    }
+                    if(it.key.toString().equals("actual_comment")){
+                        eachComment.actual_comment = it.value.toString()
+                    }
+                    if(it.key.toString().equals("comment_time")){
+                        eachComment.comment_time = it.value.toString()
+                    }
+                    if(it.key.toString().equals("image")){
+                        AddImageToComment(commentId, it.value.toString())
+                    }
+
+                }
+                indivCommentList.add((eachComment))
+                commentsAdapter.notifyDataSetChanged()
+//                viewModel.indivComments.add(eachComment)
+//                viewModel.indivCommentsVM.value = viewModel.indivComments
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+            }
+
+        })
+
+//        viewModel.indivComments.add(eachComment)
+//        indivCommentList.add(eachComment)
+//        commentsAdapter.notifyDataSetChanged()
+    }
+
+    private fun AddImageToComment(passedCommentId: String, imageUri: String) {
+        indivCommentList.forEach{indivComment->
+            if(indivComment.commentId == passedCommentId){
+                indivComment.image = imageUri
+            }
+        }
     }
 
     //Adding comment to firebase - both to questions and comments branches
@@ -200,7 +262,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 
             }
 
-            if(ImageByteArray != null)
+            else if(ImageByteArray != null)
             {
                 val uploadTask: UploadTask = storageReference.putBytes(ImageByteArray!!)
 
@@ -217,20 +279,26 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 ////                        val uri: Uri? = downloadURL.result
 ////                        setCommentImageViewFromCameraImage(URL(uri.toString()))
                     }
-                ImageByteArray = null
+//                ImageByteArray = null
             }
+            else{
+                commentPath.child("image").setValue(emptySymbolString)
+            }
+
 
             if(!TextUtils.isEmpty(enteredComment) )
             {
                 commentPath.child("actual_comment").setValue(enteredComment)
-                binding.etType.setText("")
-
-                //Making keyboard disappear
-                val mgr: InputMethodManager =
-                    requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                mgr.hideSoftInputFromWindow(binding.etType.getWindowToken(), 0)
-
+            }else{
+                commentPath.child("actual_comment").setValue(emptySymbolString)
             }
+
+            binding.etType.setText("")
+
+            //Making keyboard disappear
+            val mgr: InputMethodManager =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            mgr.hideSoftInputFromWindow(binding.etType.getWindowToken(), 0)
         }
 
         binding.ivPhotoComment.setImageURI(null)
@@ -362,7 +430,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         Glide.with(context).load(imgUrl).into(binding.ivPhotoComment)
     }
 
-    override fun onItemClick(position: String) {
+    override fun onItemClick(position: CommentModel) {
 //        TODO("Not yet implemented")
     }
 

@@ -2,14 +2,15 @@ package com.example.classcollab
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.classcollab.model.CommentModel
 
 //Just a viewmodel for this app
 class ArrayStringViewModel : ViewModel(){
 
     //List of commentIds
-    var indivCommentIds = mutableListOf<String>()
-    val indivCommentIdsVM : MutableLiveData<MutableList<String>> by lazy {
-        MutableLiveData<MutableList<String>>()
+    var indivComments = mutableListOf<CommentModel>()
+    val indivCommentsVM : MutableLiveData<MutableList<CommentModel>> by lazy {
+        MutableLiveData<MutableList<CommentModel>>()
     }
 
     //List of question ids
