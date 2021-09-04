@@ -123,6 +123,7 @@ class IndividualClass : Fragment(), LevelAdapter.OnItemClickListener {
 
                     viewModel.questionTopic.add(it.key.toString())
                     viewModel.questionTopicVM.value = viewModel.questionTopic
+
                 }
             }
 

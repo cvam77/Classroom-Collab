@@ -2,13 +2,10 @@ package com.example.classcollab.RecyclerView
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.graphics.Typeface
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.net.toUri
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classcollab.IndividualQuestionDirections
@@ -26,9 +23,9 @@ Comments Adapter acts as an adapter for those recycler views that have been used
  all comment sections in the app
  */
 class CommentsAdapter(
-        private val context: Context?,
-        private var indivCommentList: MutableList<CommentModel>?,
-        private var listener: CommentsAdapter.OnItemClickListener
+    private val context: Context?,
+    private var indivCommentList: List<CommentModel>,
+    private var listener: OnItemClickListener
 ) :
         RecyclerView.Adapter<CommentsAdapter.ViewHolder>()
 {
@@ -45,14 +42,14 @@ class CommentsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        database = Firebase.database.reference
+//        database = Firebase.database.reference
 
         val indivComment: CommentModel = getIndivCommentsList().get(position)
 
-//        println(indivComment)
         holder.commentTime.setText(indivComment.comment_time)
 //        holder.commentPic.setImageURI(indivComment.image.toUri())
         holder.commenter.setText(indivComment.commenter)
+
         holder.eachCommentTv.setText(indivComment.actual_comment)
 
         val fileName = indivComment.image
@@ -70,68 +67,8 @@ class CommentsAdapter(
                 Navigation.findNavController(it).navigate(action)
             })
         }.addOnFailureListener{
-            Toast.makeText(context,"Failed", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context,"magna cum laude", Toast.LENGTH_SHORT).show()
         }
-
-
-//        println(commentId)
-//        database.child("comments").child(commentId).addValueEventListener(object: ValueEventListener{
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val children = snapshot!!.children
-//                children.forEach {
-//
-//                    println(it.key.toString())
-//                    println()
-//                    if(it.key.toString().equals("commenter")){
-//                        holder.commenter.setText(it.value.toString())
-//                    }
-//                    if(it.key.toString().equals("actual_comment")){
-//                        holder.eachCommentTv.setText(it.value.toString())
-//                    }
-//                    if(it.key.toString().equals("comment_time")){
-//                        holder.commentTime.setText(it.value.toString())
-//                    }
-////                    if(it.key.toString().equals("image")){
-////                        val fileName = it.value
-////                        //comment time
-////                        holder.commentTime.setText(fileName.toString())
-////
-////                        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
-////
-////                        val localfile = File.createTempFile("tempImage","jpg")
-////                        storageReference.getFile(localfile).addOnSuccessListener {
-////                            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
-////
-////                            //comment picture
-////                            holder.commentPic.visibility=View.VISIBLE
-////                            holder.commentPic.setImageBitmap(bitmap)
-////                            holder.commentPic.setOnClickListener(View.OnClickListener {
-////                                val action = IndividualQuestionDirections.actionIndividualQuestionToViewIndividualImage(fileName.toString())
-////                                Navigation.findNavController(it).navigate(action)
-////                            })
-////                        }.addOnFailureListener{
-////                            Toast.makeText(context,"Failed", Toast.LENGTH_SHORT).show()
-////                        }
-////                    }
-//
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-////                TODO("Not yet implemented")
-//            }
-//
-//        })
-//        println("comments = " + commentId)
-
-//        if(position==0 && !firstPositionMarked){
-//            holder.eachCommentTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
-//            holder.eachCommentTv.setTypeface(Typeface.DEFAULT_BOLD)
-//            firstPositionMarked = true
-////            holder.commentPic.layoutParams.height = 350
-////            holder.commentPic.layoutParams.width = 350
-//
-//        }
 
     }
 
@@ -141,7 +78,7 @@ class CommentsAdapter(
         return getIndivCommentsList().size
     }
 
-    fun getIndivCommentsList(): MutableList<CommentModel> {
+    fun getIndivCommentsList(): List<CommentModel> {
         return indivCommentList!!
     }
 

@@ -58,7 +58,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
     private lateinit var storageReference: StorageReference
     var commentIdsListFirebase = mutableListOf<String>()
     var indivCommentList = mutableListOf<CommentModel>()
-    private var emptySymbolString: String = "empty"
+    private var emptySymbolString: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -88,7 +88,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         recyclerView.adapter = commentsAdapter
 
         viewModel.indivCommentsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-//            commentsAdapter.setIndivCommentsList(it)
+            commentsAdapter.setIndivCommentsList(it.values.toList() as MutableList<CommentModel>)
         })
 
 
@@ -148,9 +148,15 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
                 val children = snapshot!!.children
 
                 children.forEach{
-                    if(!commentIdsListFirebase.contains(it.key.toString())){
+//                    if(!commentIdsListFirebase.contains(it.key.toString())){
+//
+//                        commentIdsListFirebase.add(it.key.toString())
+//                        GetActualComment(it.key.toString())
+//                    }
 
-                        commentIdsListFirebase.add(it.key.toString())
+                    if(!viewModel.indivComments.containsKey(it.key.toString())){
+
+                        viewModel.indivComments[it.key.toString()] = CommentModel()
                         GetActualComment(it.key.toString())
                     }
 //                    commentIdsListFirebase
@@ -177,31 +183,35 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
 //                if(viewModel.indivComments.contains())
-                var eachComment = CommentModel()
-                eachComment.commentId = commentId
+//                var eachComment = CommentModel()
+//                eachComment.commentId = commentId
+
                 val children = snapshot!!.children
 
                 children.forEach {
 
 
                     if(it.key.toString().equals("commenter")){
-                        eachComment.commenter=it.value.toString()
+                        viewModel.indivComments.get(commentId)?.commenter=it.value.toString()
                     }
                     if(it.key.toString().equals("actual_comment")){
-                        eachComment.actual_comment = it.value.toString()
+                        viewModel.indivComments.get(commentId)?.actual_comment=it.value.toString()
                     }
                     if(it.key.toString().equals("comment_time")){
-                        eachComment.comment_time = it.value.toString()
+                        viewModel.indivComments.get(commentId)?.comment_time=it.value.toString()
                     }
                     if(it.key.toString().equals("image")){
-                        AddImageToComment(commentId, it.value.toString())
+                        viewModel.indivComments.get(commentId)?.image=it.value.toString()
                     }
 
                 }
-                indivCommentList.add((eachComment))
-                commentsAdapter.notifyDataSetChanged()
+//                commentsAdapter.notifyDataSetChanged()
+
+//                indivCommentList.add((eachComment))
+//                commentsAdapter.notifyDataSetChanged()
 //                viewModel.indivComments.add(eachComment)
 //                viewModel.indivCommentsVM.value = viewModel.indivComments
+                viewModel.indivCommentsVM.value = viewModel.indivComments
 
             }
 
@@ -216,13 +226,16 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 //        commentsAdapter.notifyDataSetChanged()
     }
 
-    private fun AddImageToComment(passedCommentId: String, imageUri: String) {
-        indivCommentList.forEach{indivComment->
-            if(indivComment.commentId == passedCommentId){
-                indivComment.image = imageUri
-            }
-        }
-    }
+    //this function will iterate the indivCommentList ( a list of commentmodel objects)
+    //and add imageUri to the object with the passedCommentId
+//    private fun AddImageToComment(passedCommentId: String, imageUri: String) {
+//        indivCommentList.forEach{indivComment->
+//            if(indivComment.commentId == passedCommentId){
+//                indivComment.image = imageUri
+//                commentsAdapter.notifyDataSetChanged()
+//            }
+//        }
+//    }
 
     //Adding comment to firebase - both to questions and comments branches
     fun AddCommentToFirebase() {

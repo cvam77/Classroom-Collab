@@ -8,9 +8,9 @@ import com.example.classcollab.model.CommentModel
 class ArrayStringViewModel : ViewModel(){
 
     //List of commentIds
-    var indivComments = mutableListOf<CommentModel>()
-    val indivCommentsVM : MutableLiveData<MutableList<CommentModel>> by lazy {
-        MutableLiveData<MutableList<CommentModel>>()
+    var indivComments = LinkedHashMap<String,CommentModel>()
+    val indivCommentsVM : MutableLiveData<LinkedHashMap<String, CommentModel>> by lazy {
+        MutableLiveData<LinkedHashMap<String, CommentModel>>()
     }
 
     //List of question ids

@@ -24,8 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/each_comment_tv"
-        android:background="@color/purple_500"
-        android:textColor="@color/white"
+
+        android:textColor="@color/black"
         android:gravity="center"
         android:text=""
         android:textSize="20sp"
