@@ -1,7 +1,6 @@
 package com.example.classcollab.RecyclerView
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import com.example.classcollab.IndividualQuestionDirections
 import com.example.classcollab.R
 import com.example.classcollab.model.CommentModel
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
@@ -24,7 +21,7 @@ Comments Adapter acts as an adapter for those recycler views that have been used
  */
 class CommentsAdapter(
     private val context: Context?,
-    private var indivCommentList: List<CommentModel>,
+    private var indivCommentList: MutableCollection<CommentModel>,
     private var listener: OnItemClickListener
 ) :
         RecyclerView.Adapter<CommentsAdapter.ViewHolder>()
@@ -52,23 +49,32 @@ class CommentsAdapter(
 
         holder.eachCommentTv.setText(indivComment.actual_comment)
 
-        val fileName = indivComment.image
-        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
-
-        val localfile = File.createTempFile("tempImage","jpg")
-        storageReference.getFile(localfile).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
-
-            //comment picture
+        if(indivComment.bitmap != null){
             holder.commentPic.visibility=View.VISIBLE
-            holder.commentPic.setImageBitmap(bitmap)
+            holder.commentPic.setImageBitmap(indivComment.bitmap)
+
             holder.commentPic.setOnClickListener(View.OnClickListener {
-                val action = IndividualQuestionDirections.actionIndividualQuestionToViewIndividualImage(fileName.toString())
+                val action = IndividualQuestionDirections.actionIndividualQuestionToViewIndividualImage(indivComment.image.toString())
                 Navigation.findNavController(it).navigate(action)
             })
-        }.addOnFailureListener{
-//                Toast.makeText(context,"magna cum laude", Toast.LENGTH_SHORT).show()
         }
+//        val fileName = indivComment.image
+//        storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+//
+//        val localfile = File.createTempFile("tempImage","jpg")
+//        storageReference.getFile(localfile).addOnSuccessListener {
+//            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+//
+//            //comment picture
+//            holder.commentPic.visibility=View.VISIBLE
+//            holder.commentPic.setImageBitmap(bitmap)
+//            holder.commentPic.setOnClickListener(View.OnClickListener {
+//                val action = IndividualQuestionDirections.actionIndividualQuestionToViewIndividualImage(fileName.toString())
+//                Navigation.findNavController(it).navigate(action)
+//            })
+//        }.addOnFailureListener{
+////                Toast.makeText(context,"magna cum laude", Toast.LENGTH_SHORT).show()
+//        }
 
     }
 
@@ -78,11 +84,12 @@ class CommentsAdapter(
         return getIndivCommentsList().size
     }
 
-    fun getIndivCommentsList(): List<CommentModel> {
-        return indivCommentList!!
+    fun getIndivCommentsList(): MutableList<CommentModel> {
+        return indivCommentList!!.toMutableList()
+
     }
 
-    fun setIndivCommentsList(passedQS: MutableList<CommentModel>){
+    fun setIndivCommentsList(passedQS: MutableCollection<CommentModel>){
 
         indivCommentList = passedQS
         notifyDataSetChanged()
@@ -108,7 +115,7 @@ class CommentsAdapter(
 
             if(position != RecyclerView.NO_POSITION)
             {
-                val string = getIndivCommentsList().get(position)
+                val string = getIndivCommentsList().elementAt(position)
                 listener.onItemClick(string)
             }
 

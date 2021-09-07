@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.classcollab.RecyclerView.CommentsAdapter
 import com.example.classcollab.databinding.FragmentIndividualQuestionBinding
+import com.example.classcollab.helper.SetUpIndivList
 import com.example.classcollab.model.CommentModel
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +43,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
@@ -78,7 +81,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         database = Firebase.database.reference
         viewModel = ViewModelProvider(this).get(ArrayStringViewModel::class.java)
 
-        commentsAdapter = CommentsAdapter(context,indivCommentList, this)
+        commentsAdapter = CommentsAdapter(context,viewModel.indivComments.values, this)
         val recyclerView: RecyclerView = binding.rvIndivQuestions
         val layoutManager = LinearLayoutManager(context)
         layoutManager.stackFromEnd = true
@@ -88,10 +91,8 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
         recyclerView.adapter = commentsAdapter
 
         viewModel.indivCommentsVM.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            commentsAdapter.setIndivCommentsList(it.values.toList() as MutableList<CommentModel>)
+            commentsAdapter.setIndivCommentsList(it.values)
         })
-
-
 
         binding.moreOptionsPopup.setOnClickListener {
             val popup = PopupMenu(context, binding.moreOptionsPopup)
@@ -127,6 +128,42 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 //        )
 
         PrepareCommentIdList()
+
+//        viewModel.indivComments = SetUpIndivList(viewModel.indivComments as MutableList<CommentModel>).getFileFromFirebase()
+//        getFileFromFirebase(viewModel.indivComments)
+//        commentsAdapter.notifyDataSetChanged()
+    }
+
+    //bulk download images
+    fun getSingleImageFromFirebase(commentId: String, fileName: String){
+        val storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+        val localfile = File.createTempFile("tempImage","jpg")
+
+        storageReference.getFile(localfile).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+            viewModel.indivComments.get(commentId)?.bitmap=bitmap
+            viewModel.indivCommentsVM.value = viewModel.indivComments
+            viewModel.indivComments
+            commentsAdapter.notifyDataSetChanged()
+        }
+
+
+    }
+
+    //bulk download images
+    fun getFileFromFirebase(indivList: LinkedHashMap<String, CommentModel>){
+        for (comment in indivList.values){
+            val fileName = comment.image
+
+            val storageReference = FirebaseStorage.getInstance().getReference("images/$fileName")
+            val localfile = File.createTempFile("tempImage","jpg")
+
+            storageReference.getFile(localfile).addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+                comment.bitmap = bitmap
+                viewModel.indivCommentsVM.value = viewModel.indivComments
+            }
+        }
 
 
     }
@@ -202,6 +239,7 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
                     }
                     if(it.key.toString().equals("image")){
                         viewModel.indivComments.get(commentId)?.image=it.value.toString()
+                        getSingleImageFromFirebase(commentId,it.value.toString())
                     }
 
                 }
@@ -211,8 +249,8 @@ class IndividualQuestion : Fragment(), CommentsAdapter.OnItemClickListener {
 //                commentsAdapter.notifyDataSetChanged()
 //                viewModel.indivComments.add(eachComment)
 //                viewModel.indivCommentsVM.value = viewModel.indivComments
-                viewModel.indivCommentsVM.value = viewModel.indivComments
-
+//                viewModel.indivCommentsVM.value = viewModel.indivComments
+                commentsAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {

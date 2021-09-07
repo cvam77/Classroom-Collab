@@ -1,5 +1,7 @@
 package com.example.classcollab.model
 
+import android.graphics.Bitmap
+
 class CommentModel {
     /*
     comment
@@ -13,6 +15,6 @@ class CommentModel {
     var comment_time: String = ""
     var commenter: String = ""
     var image: String = ""
-
+    var bitmap: Bitmap? = null
 
 }
